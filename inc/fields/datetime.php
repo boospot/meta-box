@@ -51,24 +51,52 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	);
 
 	/**
+	 * Enqueue scripts and styles.
+	 */
+	public static function admin_enqueue_scripts() {
+		self::admin_register_scripts();
+		wp_enqueue_style( 'jquery-ui-timepicker' );
+		wp_enqueue_script( 'rwmb-datetime' );
+	}
+
+	/**
 	 * Register scripts and styles.
 	 */
 	public static function admin_register_scripts() {
 		$url = RWMB_CSS_URL . 'jqueryui';
 		wp_register_style( 'jquery-ui-core', "$url/jquery.ui.core.css", array(), '1.8.17' );
 		wp_register_style( 'jquery-ui-theme', "$url/jquery.ui.theme.css", array(), '1.8.17' );
-		wp_register_style( 'jquery-ui-datepicker', "$url/jquery.ui.datepicker.css", array( 'jquery-ui-core', 'jquery-ui-theme' ), '1.8.17' );
+		wp_register_style( 'jquery-ui-datepicker', "$url/jquery.ui.datepicker.css", array(
+			'jquery-ui-core',
+			'jquery-ui-theme'
+		), '1.8.17' );
 		wp_register_style( 'rwmb-date', RWMB_CSS_URL . 'date.css', array( 'jquery-ui-datepicker' ), '1.8.17' );
 
-		wp_register_style( 'jquery-ui-slider', "$url/jquery.ui.slider.css", array( 'jquery-ui-core', 'jquery-ui-theme' ), '1.8.17' );
-		wp_register_style( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.css", array( 'rwmb-date', 'jquery-ui-slider' ), '1.5.0' );
+		wp_register_style( 'jquery-ui-slider', "$url/jquery.ui.slider.css", array(
+			'jquery-ui-core',
+			'jquery-ui-theme'
+		), '1.8.17' );
+		wp_register_style( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.css", array(
+			'rwmb-date',
+			'jquery-ui-slider'
+		), '1.5.0' );
 
 		$url = RWMB_JS_URL . 'jqueryui';
-		wp_register_script( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.js", array( 'jquery-ui-datepicker', 'jquery-ui-slider' ), '1.5.0', true );
+		wp_register_script( 'jquery-ui-timepicker', "$url/jquery-ui-timepicker-addon.min.js", array(
+			'jquery-ui-datepicker',
+			'jquery-ui-slider'
+		), '1.5.0', true );
 		wp_register_script( 'jquery-ui-timepicker-i18n', "$url/jquery-ui-timepicker-addon-i18n.min.js", array( 'jquery-ui-timepicker' ), '1.5.0', true );
 
-		wp_register_script( 'rwmb-datetime', RWMB_JS_URL . 'datetime.js', array( 'jquery-ui-datepicker', 'jquery-ui-timepicker-i18n', 'underscore' ), RWMB_VER, true );
-		wp_register_script( 'rwmb-date', RWMB_JS_URL . 'date.js', array( 'jquery-ui-datepicker', 'underscore' ), RWMB_VER, true );
+		wp_register_script( 'rwmb-datetime', RWMB_JS_URL . 'datetime.js', array(
+			'jquery-ui-datepicker',
+			'jquery-ui-timepicker-i18n',
+			'underscore'
+		), RWMB_VER, true );
+		wp_register_script( 'rwmb-date', RWMB_JS_URL . 'date.js', array(
+			'jquery-ui-datepicker',
+			'underscore'
+		), RWMB_VER, true );
 		wp_register_script( 'rwmb-time', RWMB_JS_URL . 'time.js', array( 'jquery-ui-timepicker-i18n' ), RWMB_VER, true );
 
 		$handles      = array( 'datetime', 'time' );
@@ -84,18 +112,9 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	}
 
 	/**
-	 * Enqueue scripts and styles.
-	 */
-	public static function admin_enqueue_scripts() {
-		self::admin_register_scripts();
-		wp_enqueue_style( 'jquery-ui-timepicker' );
-		wp_enqueue_script( 'rwmb-datetime' );
-	}
-
-	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  The field meta value.
+	 * @param mixed $meta The field meta value.
 	 * @param array $field The field parameters.
 	 *
 	 * @return string
@@ -104,8 +123,8 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 		$output = '';
 
 		if ( $field['timestamp'] ) {
-			$name    = $field['field_name'];
-			$field   = wp_parse_args(
+			$name   = $field['field_name'];
+			$field  = wp_parse_args(
 				array(
 					'field_name' => $name . '[formatted]',
 				),
@@ -116,7 +135,7 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 				esc_attr( $name . '[timestamp]' ),
 				isset( $meta['timestamp'] ) ? intval( $meta['timestamp'] ) : ''
 			);
-			$meta    = isset( $meta['formatted'] ) ? $meta['formatted'] : '';
+			$meta   = isset( $meta['formatted'] ) ? $meta['formatted'] : '';
 		}
 
 		$output .= parent::html( $meta, $field );
@@ -131,10 +150,10 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	/**
 	 * Calculates the timestamp from the datetime string and returns it if $field['timestamp'] is set or the datetime string if not.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return string|int
 	 */
@@ -154,9 +173,9 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	/**
 	 * Get meta value.
 	 *
-	 * @param int   $post_id The post ID.
-	 * @param bool  $saved   Whether the meta box is saved at least once.
-	 * @param array $field   The field parameters.
+	 * @param int $post_id The post ID.
+	 * @param bool $saved Whether the meta box is saved at least once.
+	 * @param array $field The field parameters.
 	 *
 	 * @return mixed
 	 */
@@ -175,28 +194,16 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	}
 
 	/**
-	 * Format meta value if set 'timestamp'.
-	 *
-	 * @param  string $meta  The meta value.
-	 * @param  array  $field Field parameters.
-	 * @return array
-	 */
-	public static function from_timestamp( $meta, $field ) {
-		return array(
-			'timestamp' => $meta ? $meta : null,
-			'formatted' => $meta ? date( $field['php_format'], intval( $meta ) ) : '',
-		);
-	}
-
-	/**
 	 * Transform meta value from save format to the JS format.
 	 *
-	 * @param  string $meta  The meta value.
-	 * @param  array  $field Field parameters.
+	 * @param string $meta The meta value.
+	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function from_save_format( $meta, $field ) {
 		$date = DateTime::createFromFormat( $field['save_format'], $meta );
+
 		return false === $date ? $meta : $date->format( $field['php_format'] );
 	}
 
@@ -204,6 +211,7 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field The field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -246,6 +254,21 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	}
 
 	/**
+	 * Returns a date() compatible format string from the JavaScript format.
+	 *
+	 * @link http://www.php.net/manual/en/function.date.php
+	 *
+	 * @param array $js_options JavaScript options.
+	 *
+	 * @return string
+	 */
+	protected static function get_php_format( $js_options ) {
+		return strtr( $js_options['dateFormat'], self::$date_formats )
+		       . $js_options['separator']
+		       . strtr( $js_options['timeFormat'], self::$time_formats );
+	}
+
+	/**
 	 * Get the attributes for a field.
 	 *
 	 * @param array $field The field parameters.
@@ -267,25 +290,11 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 	}
 
 	/**
-	 * Returns a date() compatible format string from the JavaScript format.
-	 *
-	 * @link http://www.php.net/manual/en/function.date.php
-	 * @param array $js_options JavaScript options.
-	 *
-	 * @return string
-	 */
-	protected static function get_php_format( $js_options ) {
-		return strtr( $js_options['dateFormat'], self::$date_formats )
-		. $js_options['separator']
-		. strtr( $js_options['timeFormat'], self::$time_formats );
-	}
-
-	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param string $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -299,6 +308,22 @@ class RWMB_Datetime_Field extends RWMB_Text_Field {
 				'formatted' => $value,
 			);
 		}
+
 		return empty( $args['format'] ) ? $value['formatted'] : date( $args['format'], $value['timestamp'] );
+	}
+
+	/**
+	 * Format meta value if set 'timestamp'.
+	 *
+	 * @param string $meta The meta value.
+	 * @param array $field Field parameters.
+	 *
+	 * @return array
+	 */
+	public static function from_timestamp( $meta, $field ) {
+		return array(
+			'timestamp' => $meta ? $meta : null,
+			'formatted' => $meta ? date( $field['php_format'], intval( $meta ) ) : '',
+		);
 	}
 }

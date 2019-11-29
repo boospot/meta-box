@@ -43,9 +43,20 @@ class RWMB_Media_Modal {
 	}
 
 	/**
+	 * Check if the meta box is for editing custom fields in the media modal.
+	 *
+	 * @param array $meta_box Meta Box parameters.
+	 *
+	 * @return bool
+	 */
+	protected function is_in_modal( $meta_box ) {
+		return in_array( 'attachment', $meta_box['post_types'], true ) && ! empty( $meta_box['media_modal'] );
+	}
+
+	/**
 	 * Add fields to the attachment edit popup.
 	 *
-	 * @param array   $form_fields An array of attachment form fields.
+	 * @param array $form_fields An array of attachment form fields.
 	 * @param WP_Post $post The WP_Post attachment object.
 	 *
 	 * @return mixed
@@ -96,23 +107,12 @@ class RWMB_Media_Modal {
 	/**
 	 * Whether or not show the meta box when editing custom fields in the normal mode.
 	 *
-	 * @param bool  $show     Whether to show the meta box in normal editing mode.
+	 * @param bool $show Whether to show the meta box in normal editing mode.
 	 * @param array $meta_box Meta Box parameters.
 	 *
 	 * @return bool
 	 */
 	public function is_in_normal_mode( $show, $meta_box ) {
 		return $show && ! $this->is_in_modal( $meta_box );
-	}
-
-	/**
-	 * Check if the meta box is for editing custom fields in the media modal.
-	 *
-	 * @param array $meta_box Meta Box parameters.
-	 *
-	 * @return bool
-	 */
-	protected function is_in_modal( $meta_box ) {
-		return in_array( 'attachment', $meta_box['post_types'], true ) && ! empty( $meta_box['media_modal'] );
 	}
 }

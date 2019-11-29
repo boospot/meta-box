@@ -31,7 +31,7 @@ class RWMB_Single_Image_Field extends RWMB_Image_Advanced_Field {
 		);
 
 		$field['attributes']['class'] .= ' rwmb-image_advanced';
-		$field['multiple']             = false;
+		$field['multiple']            = false;
 
 		return $field;
 	}
@@ -39,10 +39,10 @@ class RWMB_Single_Image_Field extends RWMB_Image_Advanced_Field {
 	/**
 	 * Get meta values to save.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return array|mixed
 	 */
@@ -53,9 +53,9 @@ class RWMB_Single_Image_Field extends RWMB_Image_Advanced_Field {
 	/**
 	 * Get the field value. Return meaningful info of the files.
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Not used for this field.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Not used for this field.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return mixed Full info of uploaded files
 	 */

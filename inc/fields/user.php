@@ -59,59 +59,11 @@ class RWMB_User_Field extends RWMB_Object_Choice_Field {
 	}
 
 	/**
-	 * Update object cache to make sure query method below always get the fresh list of users.
-	 * Unlike posts and terms, WordPress doesn't set 'last_changed' for users.
-	 * So we have to do it ourselves.
-	 *
-	 * @see clean_post_cache()
-	 */
-	public static function update_cache() {
-		wp_cache_set( 'last_changed', microtime(), 'users' );
-	}
-
-	/**
-	 * Normalize parameters for field.
-	 *
-	 * @param array $field Field parameters.
-	 *
-	 * @return array
-	 */
-	public static function normalize( $field ) {
-		// Set default field args.
-		$field = wp_parse_args(
-			$field,
-			array(
-				'placeholder'   =>esc_html__( 'Select an user', 'meta-box' ),
-				'query_args'    => array(),
-				'display_field' => 'display_name',
-			)
-		);
-
-		$field = parent::normalize( $field );
-
-		// Set default query args.
-		$limit               = $field['ajax'] ? 10 : 0;
-		$field['query_args'] = wp_parse_args(
-			$field['query_args'],
-			array(
-				'number' => $limit,
-			)
-		);
-
-		parent::set_ajax_params( $field );
-
-		if ( $field['ajax'] ) {
-			$field['js_options']['ajax_data']['field']['display_field'] = $field['display_field'];
-		}
-
-		return $field;
-	}
-
-	/**
 	 * Query users for field options.
 	 *
-	 * @param  array $meta  Saved meta value.
-	 * @param  array $field Field settings.
+	 * @param array $meta Saved meta value.
+	 * @param array $field Field settings.
+	 *
 	 * @return array        Field options array.
 	 */
 	public static function query( $meta, $field ) {
@@ -154,11 +106,60 @@ class RWMB_User_Field extends RWMB_Object_Choice_Field {
 	}
 
 	/**
+	 * Update object cache to make sure query method below always get the fresh list of users.
+	 * Unlike posts and terms, WordPress doesn't set 'last_changed' for users.
+	 * So we have to do it ourselves.
+	 *
+	 * @see clean_post_cache()
+	 */
+	public static function update_cache() {
+		wp_cache_set( 'last_changed', microtime(), 'users' );
+	}
+
+	/**
+	 * Normalize parameters for field.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return array
+	 */
+	public static function normalize( $field ) {
+		// Set default field args.
+		$field = wp_parse_args(
+			$field,
+			array(
+				'placeholder'   => esc_html__( 'Select an user', 'meta-box' ),
+				'query_args'    => array(),
+				'display_field' => 'display_name',
+			)
+		);
+
+		$field = parent::normalize( $field );
+
+		// Set default query args.
+		$limit               = $field['ajax'] ? 10 : 0;
+		$field['query_args'] = wp_parse_args(
+			$field['query_args'],
+			array(
+				'number' => $limit,
+			)
+		);
+
+		parent::set_ajax_params( $field );
+
+		if ( $field['ajax'] ) {
+			$field['js_options']['ajax_data']['field']['display_field'] = $field['display_field'];
+		}
+
+		return $field;
+	}
+
+	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param string $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -166,6 +167,7 @@ class RWMB_User_Field extends RWMB_Object_Choice_Field {
 	public static function format_single_value( $field, $value, $args, $post_id ) {
 		$display_field = $field['display_field'];
 		$user          = get_userdata( $value );
+
 		return '<a href="' . esc_url( get_author_posts_url( $value ) ) . '">' . esc_html( $user->$display_field ) . '</a>';
 	}
 }

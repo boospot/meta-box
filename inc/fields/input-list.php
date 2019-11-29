@@ -20,29 +20,46 @@ class RWMB_Input_List_Field extends RWMB_Choice_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		$options = self::transform_options( $field['options'] );
 		$walker  = new RWMB_Walker_Input_List( $field, $meta );
 		$output  = self::get_select_all_html( $field );
-		$output .= sprintf(
+		$output  .= sprintf(
 			'<ul class="rwmb-input-list%s%s">',
 			$field['collapse'] ? ' rwmb-collapse' : '',
 			$field['inline'] ? ' rwmb-inline' : ''
 		);
-		$output .= $walker->walk( $options, $field['flatten'] ? -1 : 0 );
-		$output .= '</ul>';
+		$output  .= $walker->walk( $options, $field['flatten'] ? - 1 : 0 );
+		$output  .= '</ul>';
 
 		return $output;
+	}
+
+	/**
+	 * Get html for select all|none for multiple checkbox.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return string
+	 */
+	public static function get_select_all_html( $field ) {
+		if ( $field['multiple'] && $field['select_all_none'] ) {
+			return sprintf( '<p class="rwmb-toggle-all-wrapper"><button class="rwmb-input-list-select-all-none button" data-name="%s">%s</button></p>', $field['id'], esc_html__( 'Toggle All', 'meta-box' ) );
+		}
+
+		return '';
 	}
 
 	/**
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -79,18 +96,5 @@ class RWMB_Input_List_Field extends RWMB_Choice_Field {
 		$attributes['value'] = $value;
 
 		return $attributes;
-	}
-
-	/**
-	 * Get html for select all|none for multiple checkbox.
-	 *
-	 * @param array $field Field parameters.
-	 * @return string
-	 */
-	public static function get_select_all_html( $field ) {
-		if ( $field['multiple'] && $field['select_all_none'] ) {
-			return sprintf( '<p class="rwmb-toggle-all-wrapper"><button class="rwmb-input-list-select-all-none button" data-name="%s">%s</button></p>', $field['id'],esc_html__( 'Toggle All', 'meta-box' ) );
-		}
-		return '';
 	}
 }

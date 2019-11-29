@@ -56,9 +56,49 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 	}
 
 	/**
+	 * Query terms for field options.
+	 *
+	 * @param array $meta Saved meta value.
+	 * @param array $field Field settings.
+	 *
+	 * @return array        Field options array.
+	 */
+	public static function query( $meta, $field ) {
+		$args = wp_parse_args(
+			$field['query_args'],
+			array(
+				'hide_empty'             => false,
+				'count'                  => false,
+				'update_term_meta_cache' => false,
+			)
+		);
+
+		// Query only selected items.
+		if ( ! empty( $field['ajax'] ) && ! empty( $meta ) ) {
+			$args['include'] = $meta;
+		}
+
+		$terms = get_terms( $args );
+		if ( ! is_array( $terms ) ) {
+			return array();
+		}
+		$options = array();
+		foreach ( $terms as $term ) {
+			$options[ $term->term_id ] = array(
+				'value'  => $term->term_id,
+				'label'  => self::filter( 'choice_label', $term->name, $field, $term ),
+				'parent' => $term->parent,
+			);
+		}
+
+		return $options;
+	}
+
+	/**
 	 * Add default value for 'taxonomy' field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -91,11 +131,11 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 		 * - If multiple taxonomies: show 'Select a term'.
 		 * - If single taxonomy: show 'Select a %taxonomy_name%'.
 		 */
-		$placeholder   =esc_html__( 'Select a term', 'meta-box' );
+		$placeholder   = esc_html__( 'Select a term', 'meta-box' );
 		$taxonomy_name = self::get_taxonomy_singular_name( $field );
 		if ( $taxonomy_name ) {
 			// Translators: %s is the taxonomy singular label.
-			$placeholder = sprintf(esc_html__( 'Select a %s', 'meta-box' ), strtolower( $taxonomy_name ) );
+			$placeholder = sprintf( esc_html__( 'Select a %s', 'meta-box' ), strtolower( $taxonomy_name ) );
 		}
 		$field = wp_parse_args(
 			$field,
@@ -127,49 +167,29 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 	}
 
 	/**
-	 * Query terms for field options.
+	 * Get taxonomy singular name.
 	 *
-	 * @param  array $meta  Saved meta value.
-	 * @param  array $field Field settings.
-	 * @return array        Field options array.
+	 * @param array $field Field settings.
+	 *
+	 * @return string
 	 */
-	public static function query( $meta, $field ) {
-		$args = wp_parse_args(
-			$field['query_args'],
-			array(
-				'hide_empty'             => false,
-				'count'                  => false,
-				'update_term_meta_cache' => false,
-			)
-		);
+	protected static function get_taxonomy_singular_name( $field ) {
+		if ( 1 !== count( $field['taxonomy'] ) ) {
+			return '';
+		}
+		$taxonomy        = reset( $field['taxonomy'] );
+		$taxonomy_object = get_taxonomy( $taxonomy );
 
-		// Query only selected items.
-		if ( ! empty( $field['ajax'] ) && ! empty( $meta ) ) {
-			$args['include'] = $meta;
-		}
-
-		$terms = get_terms( $args );
-		if ( ! is_array( $terms ) ) {
-			return array();
-		}
-		$options = array();
-		foreach ( $terms as $term ) {
-			$options[ $term->term_id ] = array(
-				'value'  => $term->term_id,
-				'label'  => self::filter( 'choice_label', $term->name, $field, $term ),
-				'parent' => $term->parent,
-			);
-		}
-		return $options;
+		return false === $taxonomy_object ? '' : $taxonomy_object->labels->singular_name;
 	}
 
 	/**
 	 * Get meta values to save.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return array
 	 */
@@ -182,27 +202,10 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 	}
 
 	/**
-	 * Save meta value.
-	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
-	 */
-	public static function save( $new, $old, $post_id, $field ) {
-		if ( empty( $field['id'] ) || ! $field['save_field'] ) {
-			return;
-		}
-
-		foreach ( $field['taxonomy'] as $taxonomy ) {
-			wp_set_object_terms( $post_id, $new, $taxonomy );
-		}
-	}
-
-	/**
 	 * Add new terms if users created some.
 	 *
 	 * @param array $field Field settings.
+	 *
 	 * @return int|null Term ID if added successfully, null otherwise.
 	 */
 	protected static function add_term( $field ) {
@@ -218,11 +221,29 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 	}
 
 	/**
+	 * Save meta value.
+	 *
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
+	 */
+	public static function save( $new, $old, $post_id, $field ) {
+		if ( empty( $field['id'] ) || ! $field['save_field'] ) {
+			return;
+		}
+
+		foreach ( $field['taxonomy'] as $taxonomy ) {
+			wp_set_object_terms( $post_id, $new, $taxonomy );
+		}
+	}
+
+	/**
 	 * Get raw meta value.
 	 *
-	 * @param int   $object_id Object ID.
-	 * @param array $field     Field parameters.
-	 * @param array $args      Arguments of {@see rwmb_meta()} helper.
+	 * @param int $object_id Object ID.
+	 * @param array $field Field parameters.
+	 * @param array $args Arguments of {@see rwmb_meta()} helper.
 	 *
 	 * @return mixed
 	 */
@@ -250,9 +271,9 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 	 * Get the field value.
 	 * Return list of post term objects.
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Additional arguments.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Additional arguments.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return array List of post term objects.
 	 */
@@ -272,15 +293,16 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 		if ( ! $field['clone'] && ! $field['multiple'] && is_array( $value ) ) {
 			$value = reset( $value );
 		}
+
 		return $value;
 	}
 
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param string $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -299,6 +321,7 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 	 * Render "Add New" form
 	 *
 	 * @param array $field Field settings.
+	 *
 	 * @return string
 	 */
 	public static function add_new_form( $field ) {
@@ -358,21 +381,5 @@ class RWMB_Taxonomy_Field extends RWMB_Object_Choice_Field {
 			$id = is_taxonomy_hierarchical( $taxonomy ) ? "{$taxonomy}div" : "tagsdiv-{$taxonomy}";
 			remove_meta_box( $id, null, 'side' );
 		}
-	}
-
-	/**
-	 * Get taxonomy singular name.
-	 *
-	 * @param array $field Field settings.
-	 * @return string
-	 */
-	protected static function get_taxonomy_singular_name( $field ) {
-		if ( 1 !== count( $field['taxonomy'] ) ) {
-			return '';
-		}
-		$taxonomy        = reset( $field['taxonomy'] );
-		$taxonomy_object = get_taxonomy( $taxonomy );
-
-		return false === $taxonomy_object ? '' : $taxonomy_object->labels->singular_name;
 	}
 }

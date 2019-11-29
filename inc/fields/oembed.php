@@ -13,6 +13,7 @@ class RWMB_OEmbed_Field extends RWMB_Text_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -21,7 +22,7 @@ class RWMB_OEmbed_Field extends RWMB_Text_Field {
 		$field               = wp_parse_args(
 			$field,
 			array(
-				'not_available_string' =>esc_html__( 'Embed HTML not available.', 'meta-box' ),
+				'not_available_string' => esc_html__( 'Embed HTML not available.', 'meta-box' ),
 			)
 		);
 		$field['attributes'] = wp_parse_args(
@@ -62,8 +63,9 @@ class RWMB_OEmbed_Field extends RWMB_Text_Field {
 	/**
 	 * Get embed html from url.
 	 *
-	 * @param string $url           URL.
+	 * @param string $url URL.
 	 * @param string $not_available Not available string displayed to users.
+	 *
 	 * @return string
 	 */
 	public static function get_embed( $url, $not_available = '' ) {
@@ -104,16 +106,17 @@ class RWMB_OEmbed_Field extends RWMB_Text_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		return parent::html( $meta, $field ) . sprintf(
-			'<span class="spinner"></span>
+				'<span class="spinner"></span>
 			<div class="rwmb-embed-media">%s</div>',
-			$meta ? self::get_embed( $meta, $field['not_available_string'] ) : ''
-		);
+				$meta ? self::get_embed( $meta, $field['not_available_string'] ) : ''
+			);
 	}
 
 	/**
@@ -127,15 +130,16 @@ class RWMB_OEmbed_Field extends RWMB_Text_Field {
 	public static function get_attributes( $field, $value = null ) {
 		$attributes         = parent::get_attributes( $field, $value );
 		$attributes['type'] = 'url';
+
 		return $attributes;
 	}
 
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param string $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string

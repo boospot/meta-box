@@ -14,7 +14,8 @@ class RWMB_Helpers_String {
 	/**
 	 * Convert text to Title_Case.
 	 *
-	 * @param  string $text Input text.
+	 * @param string $text Input text.
+	 *
 	 * @return string
 	 */
 	public static function title_case( $text ) {

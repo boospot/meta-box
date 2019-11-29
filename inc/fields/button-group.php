@@ -20,19 +20,20 @@ class RWMB_Button_Group_Field extends RWMB_Choice_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		$options = self::transform_options( $field['options'] );
 		$walker  = new RWMB_Walker_Input_List( $field, $meta );
 
-		$output  = sprintf(
+		$output = sprintf(
 			'<ul class="rwmb-button-input-list %s">',
 			$field['inline'] ? ' rwmb-inline' : ''
 		);
-		$output .= $walker->walk( $options, -1 );
+		$output .= $walker->walk( $options, - 1 );
 		$output .= '</ul>';
 
 		return $output;

@@ -19,7 +19,7 @@ class RWMB_Text_List_Field extends RWMB_Multiple_Values_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -58,6 +58,7 @@ class RWMB_Text_List_Field extends RWMB_Multiple_Values_Field {
 		if ( ! $field['clone'] ) {
 			$field['class'] .= ' rwmb-text_list-non-cloneable';
 		}
+
 		return $field;
 	}
 
@@ -65,25 +66,26 @@ class RWMB_Text_List_Field extends RWMB_Multiple_Values_Field {
 	 * Set value of meta before saving into database.
 	 * Do not save if all inputs has no value.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return mixed
 	 */
 	public static function value( $new, $old, $post_id, $field ) {
 		$filtered = array_filter( $new );
+
 		return count( $filtered ) ? $new : array();
 	}
 
 	/**
 	 * Format value for the helper functions.
 	 *
-	 * @param array        $field   Field parameters.
-	 * @param string|array $value   The field meta value.
-	 * @param array        $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null     $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param string|array $value The field meta value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
@@ -102,15 +104,16 @@ class RWMB_Text_List_Field extends RWMB_Multiple_Values_Field {
 			}
 		}
 		$output .= '</tbody></table>';
+
 		return $output;
 	}
 
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param array    $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param array $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -121,6 +124,7 @@ class RWMB_Text_List_Field extends RWMB_Multiple_Values_Field {
 			$output .= "<td>$subvalue</td>";
 		}
 		$output .= '</tr>';
+
 		return $output;
 	}
 }

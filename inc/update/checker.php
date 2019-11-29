@@ -28,7 +28,7 @@ class RWMB_Update_Checker {
 	/**
 	 * Constructor.
 	 *
-	 * @param object $option  Update option object.
+	 * @param object $option Update option object.
 	 */
 	public function __construct( $option ) {
 		$this->option = $option;
@@ -58,6 +58,7 @@ class RWMB_Update_Checker {
 	 */
 	public function has_extensions() {
 		$extensions = $this->get_extensions();
+
 		return ! empty( $extensions );
 	}
 
@@ -131,7 +132,7 @@ class RWMB_Update_Checker {
 		$plugins = array_filter( $response['data'], array( $this, 'has_update' ) );
 		foreach ( $plugins as $plugin ) {
 			if ( empty( $plugin->package ) ) {
-				$plugin->upgrade_notice =esc_html__( 'UPDATE UNAVAILABLE! Please enter a valid license key to enable automatic updates.', 'meta-box' );
+				$plugin->upgrade_notice = esc_html__( 'UPDATE UNAVAILABLE! Please enter a valid license key to enable automatic updates.', 'meta-box' );
 			}
 
 			$data->response[ $plugin->plugin ] = $plugin;
@@ -145,31 +146,6 @@ class RWMB_Update_Checker {
 		);
 
 		return $data;
-	}
-
-	/**
-	 * Get plugin information
-	 *
-	 * @param object $data   The plugin update data.
-	 * @param string $action Request action.
-	 * @param object $args   Extra parameters.
-	 *
-	 * @return mixed
-	 */
-	public function get_info( $data, $action, $args ) {
-		$plugins = $this->option->get( 'plugins', array() );
-		if ( 'plugin_information' !== $action || ! isset( $args->slug ) || ! in_array( $args->slug, $plugins, true ) ) {
-			return $data;
-		}
-
-		$response = $this->request(
-			array(
-				'action'  => 'get_info',
-				'product' => $args->slug,
-			)
-		);
-
-		return false === $response ? $data : $response['data'];
 	}
 
 	/**
@@ -196,7 +172,33 @@ class RWMB_Update_Checker {
 		);
 
 		$response = wp_remote_retrieve_body( $request );
+
 		return $response ? @unserialize( $response ) : false;
+	}
+
+	/**
+	 * Get plugin information
+	 *
+	 * @param object $data The plugin update data.
+	 * @param string $action Request action.
+	 * @param object $args Extra parameters.
+	 *
+	 * @return mixed
+	 */
+	public function get_info( $data, $action, $args ) {
+		$plugins = $this->option->get( 'plugins', array() );
+		if ( 'plugin_information' !== $action || ! isset( $args->slug ) || ! in_array( $args->slug, $plugins, true ) ) {
+			return $data;
+		}
+
+		$response = $this->request(
+			array(
+				'action'  => 'get_info',
+				'product' => $args->slug,
+			)
+		);
+
+		return false === $response ? $data : $response['data'];
 	}
 
 	/**

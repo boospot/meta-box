@@ -28,10 +28,11 @@ class RWMB_Wysiwyg_Field extends RWMB_Field {
 	/**
 	 * Change field value on save.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
+	 *
 	 * @return string
 	 */
 	public static function value( $new, $old, $post_id, $field ) {
@@ -41,8 +42,9 @@ class RWMB_Wysiwyg_Field extends RWMB_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -62,6 +64,7 @@ class RWMB_Wysiwyg_Field extends RWMB_Field {
 	 * Escape meta for field output.
 	 *
 	 * @param mixed $meta Meta value.
+	 *
 	 * @return mixed
 	 */
 	public static function esc_meta( $meta ) {
@@ -72,6 +75,7 @@ class RWMB_Wysiwyg_Field extends RWMB_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {

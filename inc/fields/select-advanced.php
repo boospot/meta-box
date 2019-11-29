@@ -37,6 +37,7 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -44,7 +45,7 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 			$field,
 			array(
 				'js_options'  => array(),
-				'placeholder' =>esc_html__( 'Select an item', 'meta-box' ),
+				'placeholder' => esc_html__( 'Select an item', 'meta-box' ),
 			)
 		);
 
@@ -67,6 +68,7 @@ class RWMB_Select_Advanced_Field extends RWMB_Select_Field {
 	 *
 	 * @param array $field Field parameters.
 	 * @param mixed $value Meta value.
+	 *
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {

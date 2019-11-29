@@ -19,7 +19,7 @@ class RWMB_Fieldset_Text_Field extends RWMB_Text_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -73,16 +73,17 @@ class RWMB_Fieldset_Text_Field extends RWMB_Text_Field {
 		$field['multiple']           = false;
 		$field['attributes']['id']   = false;
 		$field['attributes']['type'] = 'text';
+
 		return $field;
 	}
 
 	/**
 	 * Format value for the helper functions.
 	 *
-	 * @param array        $field   Field parameters.
-	 * @param string|array $value   The field meta value.
-	 * @param array        $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null     $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param string|array $value The field meta value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
@@ -101,15 +102,16 @@ class RWMB_Fieldset_Text_Field extends RWMB_Text_Field {
 			}
 		}
 		$output .= '</tbody></table>';
+
 		return $output;
 	}
 
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param array    $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param array $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -120,6 +122,7 @@ class RWMB_Fieldset_Text_Field extends RWMB_Text_Field {
 			$output .= "<td>$subvalue</td>";
 		}
 		$output .= '</tr>';
+
 		return $output;
 	}
 }

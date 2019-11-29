@@ -19,7 +19,7 @@ class RWMB_Autoloader {
 	/**
 	 * Adds a base directory for a class name prefix and/or suffix.
 	 *
-	 * @param string $dir    A base directory for class files.
+	 * @param string $dir A base directory for class files.
 	 * @param string $prefix The class name prefix.
 	 * @param string $suffix The class name suffix.
 	 */

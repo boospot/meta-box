@@ -19,20 +19,21 @@ class RWMB_Heading_Field extends RWMB_Field {
 	/**
 	 * Show begin HTML markup for fields.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
 	 */
 	public static function begin_html( $meta, $field ) {
 		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
+
 		return sprintf( '<h4%s>%s</h4>', $attributes, $field['name'] );
 	}
 
 	/**
 	 * Show end HTML markup for fields.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string

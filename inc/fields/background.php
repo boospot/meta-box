@@ -22,7 +22,7 @@ class RWMB_Background_Field extends RWMB_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field settings.
 	 *
 	 * @return string
@@ -43,7 +43,7 @@ class RWMB_Background_Field extends RWMB_Field {
 		$output = '<div class="rwmb-background-row">';
 
 		// Color.
-		$color   = RWMB_Color_Field::normalize(
+		$color  = RWMB_Color_Field::normalize(
 			array(
 				'type'       => 'color',
 				'id'         => "{$field['id']}_color",
@@ -56,12 +56,12 @@ class RWMB_Background_Field extends RWMB_Field {
 		$output .= '<div class="rwmb-background-row">';
 
 		// Image.
-		$image   = RWMB_File_Input_Field::normalize(
+		$image  = RWMB_File_Input_Field::normalize(
 			array(
 				'type'        => 'file_input',
 				'id'          => "{$field['id']}_image",
 				'field_name'  => "{$field['field_name']}[image]",
-				'placeholder' =>esc_html__( 'Background Image', 'meta-box' ),
+				'placeholder' => esc_html__( 'Background Image', 'meta-box' ),
 			)
 		);
 		$output .= RWMB_File_Input_Field::html( $meta['image'], $image );
@@ -70,7 +70,7 @@ class RWMB_Background_Field extends RWMB_Field {
 		$output .= '<div class="rwmb-background-row">';
 
 		// Repeat.
-		$repeat  = RWMB_Select_Field::normalize(
+		$repeat = RWMB_Select_Field::normalize(
 			array(
 				'type'        => 'select',
 				'id'          => "{$field['id']}_repeat",
@@ -107,7 +107,7 @@ class RWMB_Background_Field extends RWMB_Field {
 				),
 			)
 		);
-		$output  .= RWMB_Select_Field::html( $meta['position'], $position );
+		$output   .= RWMB_Select_Field::html( $meta['position'], $position );
 
 		// Attachment.
 		$attachment = RWMB_Select_Field::normalize(
@@ -123,10 +123,10 @@ class RWMB_Background_Field extends RWMB_Field {
 				),
 			)
 		);
-		$output    .= RWMB_Select_Field::html( $meta['attachment'], $attachment );
+		$output     .= RWMB_Select_Field::html( $meta['attachment'], $attachment );
 
 		// Size.
-		$size    = RWMB_Select_Field::normalize(
+		$size   = RWMB_Select_Field::normalize(
 			array(
 				'type'        => 'select',
 				'id'          => "{$field['id']}_size",
@@ -148,9 +148,9 @@ class RWMB_Background_Field extends RWMB_Field {
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param array    $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param array $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -163,8 +163,9 @@ class RWMB_Background_Field extends RWMB_Field {
 		$value  = array_filter( $value );
 		foreach ( $value as $key => $subvalue ) {
 			$subvalue = 'image' === $key ? 'url(' . esc_url( $subvalue ) . ')' : $subvalue;
-			$output  .= 'background-' . $key . ': ' . $subvalue . ';';
+			$output   .= 'background-' . $key . ': ' . $subvalue . ';';
 		}
+
 		return $output;
 	}
 }

@@ -29,7 +29,7 @@ class RWMB_Update_Settings {
 	 * Constructor.
 	 *
 	 * @param object $checker Update checker object.
-	 * @param object $option  Update option object.
+	 * @param object $option Update option object.
 	 */
 	public function __construct( $checker, $option ) {
 		$this->checker = $checker;
@@ -86,51 +86,55 @@ class RWMB_Update_Settings {
 	 */
 	public function render() {
 		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Meta Box License', 'meta-box' ); ?></h1>
-			<p><?php esc_html_e( 'Please enter your license key to enable automatic updates for Meta Box extensions.', 'meta-box' ); ?></p>
-			<p>
+        <div class="wrap">
+            <h1><?php esc_html_e( 'Meta Box License', 'meta-box' ); ?></h1>
+            <p><?php esc_html_e( 'Please enter your license key to enable automatic updates for Meta Box extensions.', 'meta-box' ); ?></p>
+            <p>
 				<?php
 				printf(
-					// Translators: %1$s - URL to the My Account page, %2$s - URL to the pricing page.
-					wp_kses_post(esc_html__( 'To get the license key, visit the <a href="%1$s" target="_blank">My Account</a> page on metabox.io website. If you have not purchased any extension yet, please <a href="%2$s" target="_blank">get a new license here</a>.', 'meta-box' ) ),
+				// Translators: %1$s - URL to the My Account page, %2$s - URL to the pricing page.
+					wp_kses_post( esc_html__( 'To get the license key, visit the <a href="%1$s" target="_blank">My Account</a> page on metabox.io website. If you have not purchased any extension yet, please <a href="%2$s" target="_blank">get a new license here</a>.', 'meta-box' ) ),
 					'https://metabox.io/my-account/',
 					'https://metabox.io/pricing/'
 				);
 				?>
-			</p>
+            </p>
 
-			<form action="" method="post">
+            <form action="" method="post">
 				<?php wp_nonce_field( 'meta-box' ); ?>
 
-				<table class="form-table">
-					<tr>
-						<th scope="row"><?php esc_html_e( 'License Key', 'meta-box' ); ?></th>
-						<td>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row"><?php esc_html_e( 'License Key', 'meta-box' ); ?></th>
+                        <td>
 							<?php
 							$messages = array(
 								// Translators: %1$s - URL to the pricing page.
-								'invalid' =>esc_html__( 'Your license key is <b>invalid</b>. Please update your license key or <a href="%1$s" target="_blank">get a new one here</a>.', 'meta-box' ),
+								'invalid' => esc_html__( 'Your license key is <b>invalid</b>. Please update your license key or <a href="%1$s" target="_blank">get a new one here</a>.', 'meta-box' ),
 								// Translators: %1$s - URL to the pricing page.
-								'error'   =>esc_html__( 'Your license key is <b>invalid</b>. Please update your license key or <a href="%1$s" target="_blank">get a new one here</a>.', 'meta-box' ),
+								'error'   => esc_html__( 'Your license key is <b>invalid</b>. Please update your license key or <a href="%1$s" target="_blank">get a new one here</a>.', 'meta-box' ),
 								// Translators: %2$s - URL to the My Account page.
-								'expired' =>esc_html__( 'Your license key is <b>expired</b>. Please <a href="%2$s" target="_blank">renew your license</a>.', 'meta-box' ),
-								'active'  =>esc_html__( 'Your license key is <b>active</b>.', 'meta-box' ),
+								'expired' => esc_html__( 'Your license key is <b>expired</b>. Please <a href="%2$s" target="_blank">renew your license</a>.', 'meta-box' ),
+								'active'  => esc_html__( 'Your license key is <b>active</b>.', 'meta-box' ),
 							);
 							$status   = $this->option->get_license_status();
-							$api_key  = in_array( $status, array( 'expired', 'active' ), true ) ? '********************************' : $this->option->get( 'api_key' );
+							$api_key  = in_array( $status, array(
+								'expired',
+								'active'
+							), true ) ? '********************************' : $this->option->get( 'api_key' );
 							?>
-							<input required class="regular-text" name="meta_box_updater[api_key]" value="<?php echo esc_attr( $api_key ); ?>" type="password">
+                            <input required class="regular-text" name="meta_box_updater[api_key]"
+                                   value="<?php echo esc_attr( $api_key ); ?>" type="password">
 							<?php if ( isset( $messages[ $status ] ) ) : ?>
-								<p class="description"><?php echo wp_kses_post( sprintf( $messages[ $status ], 'https://metabox.io/pricing/', 'https://metabox.io/my-account/' ) ); ?></p>
+                                <p class="description"><?php echo wp_kses_post( sprintf( $messages[ $status ], 'https://metabox.io/pricing/', 'https://metabox.io/my-account/' ) ); ?></p>
 							<?php endif; ?>
-						</td>
-					</tr>
-				</table>
+                        </td>
+                    </tr>
+                </table>
 
-				<?php submit_button(esc_html__( 'Save Changes', 'meta-box' ) ); ?>
-			</form>
-		</div>
+				<?php submit_button( esc_html__( 'Save Changes', 'meta-box' ) ); ?>
+            </form>
+        </div>
 		<?php
 	}
 
@@ -154,18 +158,18 @@ class RWMB_Update_Settings {
 		$status         = isset( $response['status'] ) ? $response['status'] : 'invalid';
 
 		if ( false === $response ) {
-			add_settings_error( '', 'mb-error',esc_html__( 'Something wrong with the connection to metabox.io. Please try again later.', 'meta-box' ) );
+			add_settings_error( '', 'mb-error', esc_html__( 'Something wrong with the connection to metabox.io. Please try again later.', 'meta-box' ) );
 		} elseif ( 'active' === $status ) {
-			add_settings_error( '', 'mb-success',esc_html__( 'Your license is activated.', 'meta-box' ), 'updated' );
+			add_settings_error( '', 'mb-success', esc_html__( 'Your license is activated.', 'meta-box' ), 'updated' );
 		} elseif ( 'expired' === $status ) {
 			// Translators: %s - URL to the My Account page.
-			$message =esc_html__( 'License expired. Please renew on the <a href="%s" target="_blank">My Account</a> page on metabox.io website.', 'meta-box' );
+			$message = esc_html__( 'License expired. Please renew on the <a href="%s" target="_blank">My Account</a> page on metabox.io website.', 'meta-box' );
 			$message = wp_kses_post( sprintf( $message, 'https://metabox.io/my-account/' ) );
 
 			add_settings_error( '', 'mb-expired', $message );
 		} else {
 			// Translators: %1$s - URL to the My Account page, %2$s - URL to the pricing page.
-			$message =esc_html__( 'Invalid license. Please <a href="%1$s" target="_blank">check again</a> or <a href="%2$s" target="_blank">get a new license here</a>.', 'meta-box' );
+			$message = esc_html__( 'Invalid license. Please <a href="%1$s" target="_blank">check again</a> or <a href="%2$s" target="_blank">get a new license here</a>.', 'meta-box' );
 			$message = wp_kses_post( sprintf( $message, 'https://metabox.io/my-account/', 'https://metabox.io/pricing/' ) );
 
 			add_settings_error( '', 'mb-invalid', $message );

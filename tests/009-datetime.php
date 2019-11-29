@@ -3,13 +3,13 @@ add_filter(
 	'rwmb_meta_boxes',
 	function ( $meta_boxes ) {
 		$meta_boxes[] = [
-			'title'  => 'Test date time fields',
+			'title' => 'Test date time fields',
 
 			'fields' => [
 				[
-					'name'       => 'Date',
-					'id'         => 'date',
-					'type'       => 'date',
+					'name' => 'Date',
+					'id'   => 'date',
+					'type' => 'date',
 
 					'js_options' => [
 						'appendText'      => '(yyyy-mm-dd]',

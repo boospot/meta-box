@@ -60,9 +60,9 @@ add_filter(
 					'id'      => 'fieldset_text',
 					'type'    => 'fieldset_text',
 					'options' => array(
-						'name'    =>esc_html__( 'Name', 'your-prefix' ),
-						'address' =>esc_html__( 'Address', 'your-prefix' ),
-						'email'   =>esc_html__( 'Email', 'your-prefix' ),
+						'name'    => esc_html__( 'Name', 'your-prefix' ),
+						'address' => esc_html__( 'Address', 'your-prefix' ),
+						'email'   => esc_html__( 'Email', 'your-prefix' ),
 					),
 				],
 				[
@@ -118,6 +118,7 @@ add_filter(
 				],
 			],
 		];
+
 		return $meta_boxes;
 	}
 );

@@ -20,7 +20,7 @@ class RWMB_Autocomplete_Field extends RWMB_Multiple_Values_Field {
 			'rwmb-autocomplete',
 			'RWMB_Autocomplete',
 			array(
-				'delete' =>esc_html__( 'Delete', 'meta-box' ),
+				'delete' => esc_html__( 'Delete', 'meta-box' ),
 			)
 		);
 	}
@@ -28,8 +28,9 @@ class RWMB_Autocomplete_Field extends RWMB_Multiple_Values_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -91,7 +92,7 @@ class RWMB_Autocomplete_Field extends RWMB_Multiple_Values_Field {
 			$meta = array_filter( $meta );
 			foreach ( $meta as $value ) {
 				$label = apply_filters( 'rwmb_autocomplete_result_label', $value, $field );
-				$html .= sprintf(
+				$html  .= sprintf(
 					$tpl,
 					esc_html( $label ),
 					esc_html__( 'Delete', 'meta-box' ),
@@ -110,6 +111,7 @@ class RWMB_Autocomplete_Field extends RWMB_Multiple_Values_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -120,6 +122,7 @@ class RWMB_Autocomplete_Field extends RWMB_Multiple_Values_Field {
 				'size' => 30,
 			)
 		);
+
 		return $field;
 	}
 }

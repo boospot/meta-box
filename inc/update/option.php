@@ -19,17 +19,10 @@ class RWMB_Update_Option {
 	private $option = 'meta_box_updater';
 
 	/**
-	 * Get an option.
-	 *
-	 * @param string $name    Option name. Pass null to return the option array.
-	 * @param mixed  $default Default value.
-	 *
-	 * @return mixed Option value or option array.
+	 * Get license status.
 	 */
-	public function get( $name = null, $default = null ) {
-		$option = $this->is_network_activated() ? get_site_option( $this->option, array() ) : get_option( $this->option, array() );
-
-		return null === $name ? $option : ( isset( $option[ $name ] ) ? $option[ $name ] : $default );
+	public function get_license_status() {
+		return $this->get_api_key() ? $this->get( 'status', 'active' ) : 'no_key';
 	}
 
 	/**
@@ -42,10 +35,30 @@ class RWMB_Update_Option {
 	}
 
 	/**
-	 * Get license status.
+	 * Get an option.
+	 *
+	 * @param string $name Option name. Pass null to return the option array.
+	 * @param mixed $default Default value.
+	 *
+	 * @return mixed Option value or option array.
 	 */
-	public function get_license_status() {
-		return $this->get_api_key() ? $this->get( 'status', 'active' ) : 'no_key';
+	public function get( $name = null, $default = null ) {
+		$option = $this->is_network_activated() ? get_site_option( $this->option, array() ) : get_option( $this->option, array() );
+
+		return null === $name ? $option : ( isset( $option[ $name ] ) ? $option[ $name ] : $default );
+	}
+
+	/**
+	 * Detect if the plugin is network activated in Multisite environment.
+	 *
+	 * @return bool
+	 */
+	public function is_network_activated() {
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		return is_multisite() && is_plugin_active_for_network( 'meta-box/meta-box.php' );
 	}
 
 	/**
@@ -62,17 +75,5 @@ class RWMB_Update_Option {
 		} else {
 			update_option( $this->option, $option );
 		}
-	}
-
-	/**
-	 * Detect if the plugin is network activated in Multisite environment.
-	 *
-	 * @return bool
-	 */
-	public function is_network_activated() {
-		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
-			require_once ABSPATH . '/wp-admin/includes/plugin.php';
-		}
-		return is_multisite() && is_plugin_active_for_network( 'meta-box/meta-box.php' );
 	}
 }

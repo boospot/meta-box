@@ -43,9 +43,9 @@ class RWMB_Video_Field extends RWMB_Media_Field {
 	/**
 	 * Get uploaded file information.
 	 *
-	 * @param int   $file_id Attachment image ID (post ID). Required.
-	 * @param array $args    Array of arguments (for size).
-	 * @param array $field   Field settings.
+	 * @param int $file_id Attachment image ID (post ID). Required.
+	 * @param array $args Array of arguments (for size).
+	 * @param array $field Field settings.
 	 *
 	 * @return array|bool False if file not found. Array of image info on success.
 	 */
@@ -90,9 +90,9 @@ class RWMB_Video_Field extends RWMB_Media_Field {
 		$thumb_id = get_post_thumbnail_id( $attachment->ID );
 		if ( ! empty( $thumb_id ) ) {
 			list( $src, $width, $height ) = wp_get_attachment_image_src( $thumb_id, 'full' );
-			$data['image']                = compact( 'src', 'width', 'height' );
+			$data['image'] = compact( 'src', 'width', 'height' );
 			list( $src, $width, $height ) = wp_get_attachment_image_src( $thumb_id, 'thumbnail' );
-			$data['thumb']                = compact( 'src', 'width', 'height' );
+			$data['thumb'] = compact( 'src', 'width', 'height' );
 		} else {
 			$src           = wp_mime_type_icon( $attachment->ID );
 			$width         = 48;
@@ -107,10 +107,10 @@ class RWMB_Video_Field extends RWMB_Media_Field {
 	/**
 	 * Format value for a clone.
 	 *
-	 * @param array        $field   Field parameters.
-	 * @param string|array $value   The field meta value.
-	 * @param array        $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null     $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param string|array $value The field meta value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
@@ -120,6 +120,7 @@ class RWMB_Video_Field extends RWMB_Media_Field {
 		// Display single video.
 		if ( 1 === count( $value ) ) {
 			$video = reset( $value );
+
 			return wp_video_shortcode(
 				array(
 					'src'    => $video['src'],

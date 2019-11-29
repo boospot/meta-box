@@ -30,6 +30,7 @@ add_filter(
 				],
 			],
 		];
+
 		return $meta_boxes;
 	}
 );

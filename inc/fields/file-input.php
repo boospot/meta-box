@@ -28,13 +28,14 @@ class RWMB_File_Input_Field extends RWMB_Input_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		$attributes = self::get_attributes( $field, $meta );
+
 		return sprintf(
 			'<input %s>
 			<a href="#" class="rwmb-file-input-select button">%s</a>
@@ -51,6 +52,7 @@ class RWMB_File_Input_Field extends RWMB_Input_Field {
 	 *
 	 * @param array $field Field parameters.
 	 * @param mixed $value Meta value.
+	 *
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {

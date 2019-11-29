@@ -27,7 +27,7 @@ class RWMB_Walker_Select_Tree {
 	 * Constructor.
 	 *
 	 * @param array $field Field parameters.
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 */
 	public function __construct( $field, $meta ) {
 		$this->field = $field;
@@ -50,15 +50,16 @@ class RWMB_Walker_Select_Tree {
 		}
 
 		$top_level = isset( $children[0] ) ? 0 : $options[0]->parent;
+
 		return $this->display_level( $children, $top_level, true );
 	}
 
 	/**
 	 * Display a hierarchy level.
 	 *
-	 * @param array $options   An array of options.
-	 * @param int   $parent_id Parent item ID.
-	 * @param bool  $active    Whether to show or hide.
+	 * @param array $options An array of options.
+	 * @param int $parent_id Parent item ID.
+	 * @param bool $active Whether to show or hide.
 	 *
 	 * @return string
 	 */
@@ -74,9 +75,9 @@ class RWMB_Walker_Select_Tree {
 			esc_attr( $parent_id ),
 			RWMB_Field::render_attributes( $attributes )
 		);
-		$output  .= $field['placeholder'] ? "<option value=''>{$field['placeholder']}</option>" : '<option></option>';
-		$output  .= $walker->walk( $children, - 1 );
-		$output  .= '</select>';
+		$output   .= $field['placeholder'] ? "<option value=''>{$field['placeholder']}</option>" : '<option></option>';
+		$output   .= $walker->walk( $children, - 1 );
+		$output   .= '</select>';
 
 		foreach ( $children as $child ) {
 			if ( isset( $options[ $child->value ] ) ) {
@@ -85,6 +86,7 @@ class RWMB_Walker_Select_Tree {
 		}
 
 		$output .= '</div>';
+
 		return $output;
 	}
 }

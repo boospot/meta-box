@@ -29,9 +29,9 @@ abstract class RWMB_Field {
 	 * That ensures the returned value are always been applied filters.
 	 * This method is not meant to be overwritten in specific fields.
 	 *
-	 * @param array $field   Field parameters.
-	 * @param bool  $saved   Whether the meta box is saved at least once.
-	 * @param int   $post_id Post ID.
+	 * @param array $field Field parameters.
+	 * @param bool $saved Whether the meta box is saved at least once.
+	 * @param int $post_id Post ID.
 	 */
 	public static function show( $field, $saved, $post_id = 0 ) {
 		$meta = self::call( $field, 'meta', $post_id, $saved );
@@ -74,9 +74,77 @@ abstract class RWMB_Field {
 	}
 
 	/**
+	 * Call a method of a field.
+	 * This should be replaced by static::$method( $args ) in PHP 5.3.
+	 *
+	 * @return mixed
+	 */
+	public static function call() {
+		$args = func_get_args();
+
+		$check = reset( $args );
+
+		// Params: method name, field, other params.
+		if ( is_string( $check ) ) {
+			$method = array_shift( $args );
+			$field  = reset( $args ); // Keep field as 1st param.
+		} else {
+			$field  = array_shift( $args );
+			$method = array_shift( $args );
+
+			if ( 'raw_meta' === $method ) {
+				// Add field param after object id.
+				array_splice( $args, 1, 0, array( $field ) );
+			} else {
+				$args[] = $field; // Add field as last param.
+			}
+		}
+
+		return call_user_func_array( array( RWMB_Helpers_Field::get_class( $field ), $method ), $args );
+	}
+
+	/**
+	 * Apply various filters based on field type, id.
+	 * Filters:
+	 * - rwmb_{$name}
+	 * - rwmb_{$field['type']}_{$name}
+	 * - rwmb_{$field['id']}_{$name}
+	 *
+	 * @return mixed
+	 */
+	public static function filter() {
+		$args = func_get_args();
+
+		// 3 first params must be: filter name, value, field. Other params will be used for filters.
+		$name  = array_shift( $args );
+		$value = array_shift( $args );
+		$field = array_shift( $args );
+
+		// List of filters.
+		$filters = array(
+			'rwmb_' . $name,
+			'rwmb_' . $field['type'] . '_' . $name,
+		);
+		if ( $field['id'] ) {
+			$field_id  = $field['clone'] ? $field['_original_id'] : $field['id'];
+			$filters[] = 'rwmb_' . $field_id . '_' . $name;
+		}
+
+		// Filter params: value, field, other params. Note: value is changed after each run.
+		array_unshift( $args, $field );
+		foreach ( $filters as $filter ) {
+			$filter_args = $args;
+			array_unshift( $filter_args, $value );
+			$value = apply_filters_ref_array( $filter, $filter_args );
+		}
+
+		return $value;
+	}
+
+	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -88,7 +156,7 @@ abstract class RWMB_Field {
 	/**
 	 * Show begin HTML markup for fields.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -118,9 +186,22 @@ abstract class RWMB_Field {
 	}
 
 	/**
+	 * Display field label description.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return string
+	 */
+	protected static function label_description( $field ) {
+		$id = $field['id'] ? ' id="' . esc_attr( $field['id'] ) . '-label-description"' : '';
+
+		return $field['label_description'] ? "<p{$id} class='description'>{$field['label_description']}</p>" : '';
+	}
+
+	/**
 	 * Show end HTML markup for fields.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -130,33 +211,11 @@ abstract class RWMB_Field {
 	}
 
 	/**
-	 * Display field label description.
-	 *
-	 * @param array $field Field parameters.
-	 * @return string
-	 */
-	protected static function label_description( $field ) {
-		$id = $field['id'] ? ' id="' . esc_attr( $field['id'] ) . '-label-description"' : '';
-		return $field['label_description'] ? "<p{$id} class='description'>{$field['label_description']}</p>" : '';
-	}
-
-	/**
-	 * Display field description.
-	 *
-	 * @param array $field Field parameters.
-	 * @return string
-	 */
-	protected static function input_description( $field ) {
-		$id = $field['id'] ? ' id="' . esc_attr( $field['id'] ) . '-description"' : '';
-		return $field['desc'] ? "<p{$id} class='description'>{$field['desc']}</p>" : '';
-	}
-
-	/**
 	 * Get raw meta value.
 	 *
-	 * @param int   $object_id Object ID.
-	 * @param array $field     Field parameters.
-	 * @param array $args      Arguments of {@see rwmb_meta()} helper.
+	 * @param int $object_id Object ID.
+	 * @param array $field Field parameters.
+	 * @param array $args Arguments of {@see rwmb_meta()} helper.
 	 *
 	 * @return mixed
 	 */
@@ -187,9 +246,9 @@ abstract class RWMB_Field {
 	/**
 	 * Get meta value.
 	 *
-	 * @param int   $post_id Post ID.
-	 * @param bool  $saved   Whether the meta box is saved at least once.
-	 * @param array $field   Field parameters.
+	 * @param int $post_id Post ID.
+	 * @param bool $saved Whether the meta box is saved at least once.
+	 * @param array $field Field parameters.
 	 *
 	 * @return mixed
 	 */
@@ -249,9 +308,9 @@ abstract class RWMB_Field {
 	/**
 	 * Process the submitted value before saving into the database.
 	 *
-	 * @param mixed $value     The submitted value.
-	 * @param int   $object_id The object ID.
-	 * @param array $field     The field settings.
+	 * @param mixed $value The submitted value.
+	 * @param int $object_id The object ID.
+	 * @param array $field The field settings.
 	 */
 	public static function process_value( $value, $object_id, $field ) {
 		$old_value = self::call( $field, 'raw_meta', $object_id );
@@ -271,10 +330,10 @@ abstract class RWMB_Field {
 	/**
 	 * Set value of meta before saving into database.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return mixed
 	 */
@@ -285,10 +344,10 @@ abstract class RWMB_Field {
 	/**
 	 * Save meta value.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 */
 	public static function save( $new, $old, $post_id, $field ) {
 		if ( empty( $field['id'] ) || ! $field['save_field'] ) {
@@ -300,12 +359,14 @@ abstract class RWMB_Field {
 		// Remove post meta if it's empty.
 		if ( ! RWMB_Helpers_Value::is_valid_for_field( $new ) ) {
 			$storage->delete( $post_id, $name );
+
 			return;
 		}
 
 		// If field is cloneable AND not force to save as multiple rows, value is saved as a single row in the database.
 		if ( $field['clone'] && ! $field['clone_as_multiple'] ) {
 			$storage->update( $post_id, $name, $new );
+
 			return;
 		}
 
@@ -316,6 +377,7 @@ abstract class RWMB_Field {
 			foreach ( $new as $new_value ) {
 				$storage->add( $post_id, $name, $new_value, false );
 			}
+
 			return;
 		}
 
@@ -351,15 +413,15 @@ abstract class RWMB_Field {
 				'clone'             => false,
 				'max_clone'         => 0,
 				'sort_clone'        => false,
-				'add_button'        =>esc_html__( '+ Add more', 'meta-box' ),
+				'add_button'        => esc_html__( '+ Add more', 'meta-box' ),
 				'clone_default'     => false,
 				'clone_as_multiple' => false,
 
-				'class'             => '',
-				'disabled'          => false,
-				'required'          => false,
-				'autofocus'         => false,
-				'attributes'        => array(),
+				'class'      => '',
+				'disabled'   => false,
+				'required'   => false,
+				'autofocus'  => false,
+				'attributes' => array(),
 
 				'sanitize_callback' => null,
 			)
@@ -444,9 +506,9 @@ abstract class RWMB_Field {
 	 * Each field can extend this function and add more data to the returned value.
 	 * See specific field classes for details.
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return mixed Field value
 	 */
@@ -480,13 +542,14 @@ abstract class RWMB_Field {
 	 * rwmb_the_field function later.
 	 *
 	 * @use self::get_value()
-	 * @see rwmb_the_value()
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string HTML output of the field
+	 * @see rwmb_the_value()
+	 *
 	 */
 	public static function the_value( $field, $args = array(), $post_id = null ) {
 		$value = self::call( 'get_value', $field, $args, $post_id );
@@ -501,10 +564,10 @@ abstract class RWMB_Field {
 	/**
 	 * Format value for the helper functions.
 	 *
-	 * @param array        $field   Field parameters.
-	 * @param string|array $value   The field meta value.
-	 * @param array        $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null     $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param string|array $value The field meta value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
@@ -517,16 +580,17 @@ abstract class RWMB_Field {
 			$output .= '<li>' . self::call( 'format_clone_value', $field, $clone, $args, $post_id ) . '</li>';
 		}
 		$output .= '</ul>';
+
 		return $output;
 	}
 
 	/**
 	 * Format value for a clone.
 	 *
-	 * @param array        $field   Field parameters.
-	 * @param string|array $value   The field meta value.
-	 * @param array        $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null     $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param string|array $value The field meta value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
@@ -539,15 +603,16 @@ abstract class RWMB_Field {
 			$output .= '<li>' . self::call( 'format_single_value', $field, $single, $args, $post_id ) . '</li>';
 		}
 		$output .= '</ul>';
+
 		return $output;
 	}
 
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param string $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -557,70 +622,15 @@ abstract class RWMB_Field {
 	}
 
 	/**
-	 * Call a method of a field.
-	 * This should be replaced by static::$method( $args ) in PHP 5.3.
+	 * Display field description.
 	 *
-	 * @return mixed
-	 */
-	public static function call() {
-		$args = func_get_args();
-
-		$check = reset( $args );
-
-		// Params: method name, field, other params.
-		if ( is_string( $check ) ) {
-			$method = array_shift( $args );
-			$field  = reset( $args ); // Keep field as 1st param.
-		} else {
-			$field  = array_shift( $args );
-			$method = array_shift( $args );
-
-			if ( 'raw_meta' === $method ) {
-				// Add field param after object id.
-				array_splice( $args, 1, 0, array( $field ) );
-			} else {
-				$args[] = $field; // Add field as last param.
-			}
-		}
-
-		return call_user_func_array( array( RWMB_Helpers_Field::get_class( $field ), $method ), $args );
-	}
-
-	/**
-	 * Apply various filters based on field type, id.
-	 * Filters:
-	 * - rwmb_{$name}
-	 * - rwmb_{$field['type']}_{$name}
-	 * - rwmb_{$field['id']}_{$name}
+	 * @param array $field Field parameters.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
-	public static function filter() {
-		$args = func_get_args();
+	protected static function input_description( $field ) {
+		$id = $field['id'] ? ' id="' . esc_attr( $field['id'] ) . '-description"' : '';
 
-		// 3 first params must be: filter name, value, field. Other params will be used for filters.
-		$name  = array_shift( $args );
-		$value = array_shift( $args );
-		$field = array_shift( $args );
-
-		// List of filters.
-		$filters = array(
-			'rwmb_' . $name,
-			'rwmb_' . $field['type'] . '_' . $name,
-		);
-		if ( $field['id'] ) {
-			$field_id  = $field['clone'] ? $field['_original_id'] : $field['id'];
-			$filters[] = 'rwmb_' . $field_id . '_' . $name;
-		}
-
-		// Filter params: value, field, other params. Note: value is changed after each run.
-		array_unshift( $args, $field );
-		foreach ( $filters as $filter ) {
-			$filter_args = $args;
-			array_unshift( $filter_args, $value );
-			$value = apply_filters_ref_array( $filter, $filter_args );
-		}
-
-		return $value;
+		return $field['desc'] ? "<p{$id} class='description'>{$field['desc']}</p>" : '';
 	}
 }

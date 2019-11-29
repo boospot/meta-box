@@ -49,6 +49,7 @@ class RWMB_Number_Field extends RWMB_Input_Field {
 				'min'  => $field['min'],
 			)
 		);
+
 		return $attributes;
 	}
 }

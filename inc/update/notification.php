@@ -36,7 +36,7 @@ class RWMB_Update_Notification {
 	 * Constructor.
 	 *
 	 * @param object $checker Update checker object.
-	 * @param object $option  Update option object.
+	 * @param object $option Update option object.
 	 */
 	public function __construct( $checker, $option ) {
 		$this->checker = $checker;
@@ -74,6 +74,18 @@ class RWMB_Update_Notification {
 	}
 
 	/**
+	 * Check if the global notification is dismissed.
+	 * Auto re-enable the notification every 2 weeks after it's dissmissed.
+	 *
+	 * @return bool
+	 */
+	private function is_dismissed() {
+		$time = $this->option->get( 'notification_dismissed_time' );
+
+		return $this->option->get( 'notification_dismissed' ) && time() - $time < 14 * DAY_IN_SECONDS;
+	}
+
+	/**
 	 * Enqueue the notification script.
 	 */
 	public function enqueue() {
@@ -103,19 +115,22 @@ class RWMB_Update_Notification {
 	public function notify() {
 		// Do not show notification on License page.
 		$screen = get_current_screen();
-		if ( in_array( $screen->id, array( 'meta-box_page_meta-box-updater', 'settings_page_meta-box-updater-network' ), true ) ) {
+		if ( in_array( $screen->id, array(
+			'meta-box_page_meta-box-updater',
+			'settings_page_meta-box-updater-network'
+		), true ) ) {
 			return;
 		}
 
 		$messages = array(
 			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
-			'no_key'  =>esc_html__( 'You have not set your Meta Box license key yet, which means you are missing out on automatic updates and support! Please <a href="%1$s">enter your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
+			'no_key'  => esc_html__( 'You have not set your Meta Box license key yet, which means you are missing out on automatic updates and support! Please <a href="%1$s">enter your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
 			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
-			'invalid' =>esc_html__( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one</a> to enable automatic updates.', 'meta-box' ),
+			'invalid' => esc_html__( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one</a> to enable automatic updates.', 'meta-box' ),
 			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
-			'error'   =>esc_html__( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one</a> to enable automatic updates.', 'meta-box' ),
+			'error'   => esc_html__( 'Your license key for Meta Box is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one</a> to enable automatic updates.', 'meta-box' ),
 			// Translators: %3$s - URL to the My Account page.
-			'expired' =>esc_html__( 'Your license key for Meta Box is <b>expired</b>. Please <a href="%3$s" target="_blank">renew your license</a> to get automatic updates and premium support.', 'meta-box' ),
+			'expired' => esc_html__( 'Your license key for Meta Box is <b>expired</b>. Please <a href="%3$s" target="_blank">renew your license</a> to get automatic updates and premium support.', 'meta-box' ),
 		);
 		$status   = $this->option->get_license_status();
 		if ( ! isset( $messages[ $status ] ) ) {
@@ -128,8 +143,8 @@ class RWMB_Update_Notification {
 	/**
 	 * Show update message on Plugins page.
 	 *
-	 * @param  array  $plugin_data Plugin data.
-	 * @param  object $response    Available plugin update data.
+	 * @param array $plugin_data Plugin data.
+	 * @param object $response Available plugin update data.
 	 */
 	public function show_update_message( $plugin_data, $response ) {
 		// Users have an active license.
@@ -139,13 +154,13 @@ class RWMB_Update_Notification {
 
 		$messages = array(
 			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
-			'no_key'  =>esc_html__( 'Please <a href="%1$s">enter your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
+			'no_key'  => esc_html__( 'Please <a href="%1$s">enter your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
 			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
-			'invalid' =>esc_html__( 'Your license key is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
+			'invalid' => esc_html__( 'Your license key is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
 			// Translators: %1$s - URL to the settings page, %2$s - URL to the pricing page.
-			'error'   =>esc_html__( 'Your license key is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
+			'error'   => esc_html__( 'Your license key is <b>invalid</b>. Please <a href="%1$s">update your license key</a> or <a href="%2$s" target="_blank">get a new one here</a>.', 'meta-box' ),
 			// Translators: %3$s - URL to the My Account page.
-			'expired' =>esc_html__( 'Your license key is <b>expired</b>. Please <a href="%3$s" target="_blank">renew your license</a>.', 'meta-box' ),
+			'expired' => esc_html__( 'Your license key is <b>expired</b>. Please <a href="%3$s" target="_blank">renew your license</a>.', 'meta-box' ),
 		);
 		$status   = $this->option->get_license_status();
 		if ( ! isset( $messages[ $status ] ) ) {
@@ -168,21 +183,9 @@ class RWMB_Update_Notification {
 			return $links;
 		}
 
-		$text    = 'no_key' === $status ?esc_html__( 'Activate License', 'meta-box' ) :esc_html__( 'Update License', 'meta-box' );
+		$text    = 'no_key' === $status ? esc_html__( 'Activate License', 'meta-box' ) : esc_html__( 'Update License', 'meta-box' );
 		$links[] = '<a href="' . esc_url( $this->settings_page ) . '" class="rwmb-activate-license" style="color: #39b54a; font-weight: bold">' . esc_html( $text ) . '</a>';
 
 		return $links;
-	}
-
-	/**
-	 * Check if the global notification is dismissed.
-	 * Auto re-enable the notification every 2 weeks after it's dissmissed.
-	 *
-	 * @return bool
-	 */
-	private function is_dismissed() {
-		$time = $this->option->get( 'notification_dismissed_time' );
-
-		return $this->option->get( 'notification_dismissed' ) && time() - $time < 14 * DAY_IN_SECONDS;
 	}
 }

@@ -19,8 +19,9 @@ abstract class RWMB_Input_Field extends RWMB_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -35,7 +36,7 @@ abstract class RWMB_Input_Field extends RWMB_Field {
 		}
 
 		$attributes = self::call( 'get_attributes', $field, $meta );
-		$output    .= sprintf( '<input %s>%s', self::render_attributes( $attributes ), self::datalist( $field ) );
+		$output     .= sprintf( '<input %s>%s', self::render_attributes( $attributes ), self::datalist( $field ) );
 
 		if ( $field['append'] ) {
 			$output .= '<span class="rwmb-input-group-append">' . esc_html( $field['append'] ) . '</span>';
@@ -49,9 +50,32 @@ abstract class RWMB_Input_Field extends RWMB_Field {
 	}
 
 	/**
+	 * Create datalist, if any.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return string
+	 */
+	protected static function datalist( $field ) {
+		if ( empty( $field['datalist'] ) ) {
+			return '';
+		}
+
+		$datalist = $field['datalist'];
+		$html     = sprintf( '<datalist id="%s">', $datalist['id'] );
+		foreach ( $datalist['options'] as $option ) {
+			$html .= sprintf( '<option value="%s"></option>', $option );
+		}
+		$html .= '</datalist>';
+
+		return $html;
+	}
+
+	/**
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -76,6 +100,7 @@ abstract class RWMB_Input_Field extends RWMB_Field {
 				)
 			);
 		}
+
 		return $field;
 	}
 
@@ -84,6 +109,7 @@ abstract class RWMB_Input_Field extends RWMB_Field {
 	 *
 	 * @param array $field Field parameters.
 	 * @param mixed $value Meta value.
+	 *
 	 * @return array
 	 */
 	public static function get_attributes( $field, $value = null ) {
@@ -102,25 +128,5 @@ abstract class RWMB_Input_Field extends RWMB_Field {
 		);
 
 		return $attributes;
-	}
-
-	/**
-	 * Create datalist, if any.
-	 *
-	 * @param array $field Field parameters.
-	 * @return string
-	 */
-	protected static function datalist( $field ) {
-		if ( empty( $field['datalist'] ) ) {
-			return '';
-		}
-
-		$datalist = $field['datalist'];
-		$html     = sprintf( '<datalist id="%s">', $datalist['id'] );
-		foreach ( $datalist['options'] as $option ) {
-			$html .= sprintf( '<option value="%s"></option>', $option );
-		}
-		$html .= '</datalist>';
-		return $html;
 	}
 }

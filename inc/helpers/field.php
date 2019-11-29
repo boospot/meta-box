@@ -17,8 +17,8 @@ class RWMB_Helpers_Field {
 	 * @link https://github.com/rilwis/meta-box/issues/850
 	 *
 	 * @param string $handle Script handle.
-	 * @param string $name   Object name.
-	 * @param array  $data   Localized data.
+	 * @param string $name Object name.
+	 * @param array $data Localized data.
 	 */
 	public static function localize_script_once( $handle, $name, $data ) {
 		if ( ! wp_scripts()->get_data( $handle, 'data' ) ) {
@@ -30,11 +30,13 @@ class RWMB_Helpers_Field {
 	 * Get field class name.
 	 *
 	 * @param array $field Field settings.
+	 *
 	 * @return string
 	 */
 	public static function get_class( $field ) {
 		$type  = self::get_type( $field );
 		$class = 'RWMB_' . RWMB_Helpers_String::title_case( $type ) . '_Field';
+
 		return class_exists( $class ) ? $class : 'RWMB_Input_Field';
 	}
 
@@ -42,6 +44,7 @@ class RWMB_Helpers_Field {
 	 * Get field type.
 	 *
 	 * @param array $field Field settings.
+	 *
 	 * @return string
 	 */
 	private static function get_type( $field ) {

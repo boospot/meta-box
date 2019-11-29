@@ -52,7 +52,7 @@ class RWMB_Map_Field extends RWMB_Field {
 			'rwmb-map',
 			'RWMB_Map',
 			array(
-				'no_results_string' =>esc_html__( 'No results found', 'meta-box' ),
+				'no_results_string' => esc_html__( 'No results found', 'meta-box' ),
 			)
 		);
 	}
@@ -60,7 +60,7 @@ class RWMB_Map_Field extends RWMB_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -117,15 +117,16 @@ class RWMB_Map_Field extends RWMB_Field {
 	 * The difference between this function and 'meta' function is 'meta' function always returns the escaped value
 	 * of the field saved in the database, while this function returns more meaningful value of the field.
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Not used for this field.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Not used for this field.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return mixed Array(latitude, longitude, zoom)
 	 */
 	public static function get_value( $field, $args = array(), $post_id = null ) {
-		$value                               = parent::get_value( $field, $args, $post_id );
+		$value = parent::get_value( $field, $args, $post_id );
 		list( $latitude, $longitude, $zoom ) = explode( ',', $value . ',,' );
+
 		return compact( 'latitude', 'longitude', 'zoom' );
 	}
 
@@ -133,9 +134,9 @@ class RWMB_Map_Field extends RWMB_Field {
 	 * Output the field value.
 	 * Display Google maps.
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Additional arguments for the map.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Additional arguments for the map.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string HTML output of the field
 	 */
@@ -147,6 +148,7 @@ class RWMB_Map_Field extends RWMB_Field {
 				'api_key' => isset( $field['api_key'] ) ? $field['api_key'] : '',
 			)
 		);
+
 		return self::render_map( $value, $args );
 	}
 
@@ -154,7 +156,7 @@ class RWMB_Map_Field extends RWMB_Field {
 	 * Render a map in the frontend.
 	 *
 	 * @param array $location The [latitude, longitude[, zoom]] location.
-	 * @param array $args     Additional arguments for the map.
+	 * @param array $args Additional arguments for the map.
 	 *
 	 * @return string
 	 */
@@ -216,6 +218,7 @@ class RWMB_Map_Field extends RWMB_Field {
 			esc_attr( $args['width'] ),
 			esc_attr( $args['height'] )
 		);
+
 		return $output;
 	}
 }

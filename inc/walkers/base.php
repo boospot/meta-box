@@ -28,7 +28,7 @@ abstract class RWMB_Walker_Base extends Walker {
 	 * Constructor.
 	 *
 	 * @param array $field Field parameters.
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 */
 	public function __construct( $field, $meta ) {
 		$this->db_fields = array(

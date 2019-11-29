@@ -12,6 +12,19 @@
  */
 class RWMB_Core {
 	/**
+	 * Get registered meta boxes via a filter.
+	 *
+	 * @return array
+	 * @deprecated No longer used. Keep for backward-compatibility with extensions.
+	 *
+	 */
+	public static function get_meta_boxes() {
+		$meta_boxes = rwmb_get_registry( 'meta_box' )->all();
+
+		return wp_list_pluck( $meta_boxes, 'meta_box' );
+	}
+
+	/**
 	 * Initialization.
 	 */
 	public function init() {
@@ -26,17 +39,34 @@ class RWMB_Core {
 	}
 
 	/**
+	 * Add hooks for extra contexts.
+	 */
+	public function add_context_hooks() {
+		$hooks = array(
+			'edit_form_top',
+			'edit_form_after_title',
+			'edit_form_after_editor',
+			'edit_form_before_permalink',
+		);
+
+		foreach ( $hooks as $hook ) {
+			add_action( $hook, array( $this, 'add_context' ) );
+		}
+	}
+
+	/**
 	 * Add links to Documentation and Extensions in plugin's list of action links.
-	 *
-	 * @since 4.3.11
 	 *
 	 * @param array $links Array of plugin links.
 	 *
 	 * @return array
+	 * @since 4.3.11
+	 *
 	 */
 	public function plugin_links( $links ) {
 		$links[] = '<a href="https://docs.metabox.io">' . esc_html__( 'Docs', 'meta-box' ) . '</a>';
 		$links[] = '<a href="https://metabox.io/pricing/" style="color: #39b54a; font-weight: bold">' . esc_html__( 'Go Pro', 'meta-box' ) . '</a>';
+
 		return $links;
 	}
 
@@ -72,34 +102,6 @@ class RWMB_Core {
 		// If the template doesn't exists, remove the data to allow WordPress to save.
 		if ( ! isset( $page_templates[ $template ] ) ) {
 			delete_post_meta( $post->ID, '_wp_page_template' );
-		}
-	}
-
-	/**
-	 * Get registered meta boxes via a filter.
-	 *
-	 * @deprecated No longer used. Keep for backward-compatibility with extensions.
-	 *
-	 * @return array
-	 */
-	public static function get_meta_boxes() {
-		$meta_boxes = rwmb_get_registry( 'meta_box' )->all();
-		return wp_list_pluck( $meta_boxes, 'meta_box' );
-	}
-
-	/**
-	 * Add hooks for extra contexts.
-	 */
-	public function add_context_hooks() {
-		$hooks = array(
-			'edit_form_top',
-			'edit_form_after_title',
-			'edit_form_after_editor',
-			'edit_form_before_permalink',
-		);
-
-		foreach ( $hooks as $hook ) {
-			add_action( $hook, array( $this, 'add_context' ) );
 		}
 	}
 

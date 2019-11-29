@@ -13,6 +13,7 @@ class RWMB_Text_Field extends RWMB_Input_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {

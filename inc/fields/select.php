@@ -20,8 +20,9 @@ class RWMB_Select_Field extends RWMB_Choice_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -36,16 +37,33 @@ class RWMB_Select_Field extends RWMB_Choice_Field {
 		if ( ! $field['multiple'] && $field['placeholder'] ) {
 			$output .= '<option value="">' . esc_html( $field['placeholder'] ) . '</option>';
 		}
-		$output .= $walker->walk( $options, $field['flatten'] ? -1 : 0 );
+		$output .= $walker->walk( $options, $field['flatten'] ? - 1 : 0 );
 		$output .= '</select>';
 		$output .= self::get_select_all_html( $field );
+
 		return $output;
+	}
+
+	/**
+	 * Get html for select all|none for multiple select.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return string
+	 */
+	public static function get_select_all_html( $field ) {
+		if ( $field['multiple'] && $field['select_all_none'] ) {
+			return '<div class="rwmb-select-all-none">' . esc_html__( 'Select', 'meta-box' ) . ': <a data-type="all" href="#">' . esc_html__( 'All', 'meta-box' ) . '</a> | <a data-type="none" href="#">' . esc_html__( 'None', 'meta-box' ) . '</a></div>';
+		}
+
+		return '';
 	}
 
 	/**
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -79,18 +97,5 @@ class RWMB_Select_Field extends RWMB_Choice_Field {
 		);
 
 		return $attributes;
-	}
-
-	/**
-	 * Get html for select all|none for multiple select.
-	 *
-	 * @param array $field Field parameters.
-	 * @return string
-	 */
-	public static function get_select_all_html( $field ) {
-		if ( $field['multiple'] && $field['select_all_none'] ) {
-			return '<div class="rwmb-select-all-none">' .esc_html__( 'Select', 'meta-box' ) . ': <a data-type="all" href="#">' .esc_html__( 'All', 'meta-box' ) . '</a> | <a data-type="none" href="#">' .esc_html__( 'None', 'meta-box' ) . '</a></div>';
-		}
-		return '';
 	}
 }

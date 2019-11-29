@@ -34,7 +34,7 @@ class RWMB_Request {
 	 */
 	public function __construct() {
 		// @codingStandardsIgnoreLine
-		$this->get_data  = $_GET;
+		$this->get_data = $_GET;
 		// @codingStandardsIgnoreLine
 		$this->post_data = $_POST;
 	}
@@ -58,10 +58,26 @@ class RWMB_Request {
 	}
 
 	/**
+	 * Filter a GET parameter.
+	 *
+	 * @param string $name Parameter name.
+	 * @param int $filter FILTER_* constant.
+	 * @param mixed $options Filter options.
+	 *
+	 * @return mixed
+	 */
+	public function filter_get( $name, $filter = FILTER_DEFAULT, $options = array() ) {
+		$value = $this->get( $name );
+
+		return filter_var( $value, $filter, $options );
+	}
+
+	/**
 	 * Return a GET parameter by name.
 	 *
-	 * @param  string $name    Parameter name.
-	 * @param  mixed  $default Default value.
+	 * @param string $name Parameter name.
+	 * @param mixed $default Default value.
+	 *
 	 * @return mixed
 	 */
 	public function get( $name, $default = null ) {
@@ -69,41 +85,29 @@ class RWMB_Request {
 	}
 
 	/**
-	 * Return a POST parameter by name.
-	 *
-	 * @param  string $name    Parameter name.
-	 * @param  mixed  $default Default value.
-	 * @return mixed
-	 */
-	public function post( $name, $default = null ) {
-		return isset( $this->post_data[ $name ] ) ? $this->post_data[ $name ] : $default;
-	}
-
-	/**
-	 * Filter a GET parameter.
-	 *
-	 * @param string $name    Parameter name.
-	 * @param int    $filter  FILTER_* constant.
-	 * @param mixed  $options Filter options.
-	 *
-	 * @return mixed
-	 */
-	public function filter_get( $name, $filter = FILTER_DEFAULT, $options = array() ) {
-		$value = $this->get( $name );
-		return filter_var( $value, $filter, $options );
-	}
-
-	/**
 	 * Filter a POST parameter.
 	 *
-	 * @param string $name    Parameter name.
-	 * @param int    $filter  FILTER_* constant.
-	 * @param mixed  $options Filter options.
+	 * @param string $name Parameter name.
+	 * @param int $filter FILTER_* constant.
+	 * @param mixed $options Filter options.
 	 *
 	 * @return mixed
 	 */
 	public function filter_post( $name, $filter = FILTER_DEFAULT, $options = array() ) {
 		$value = $this->post( $name );
+
 		return filter_var( $value, $filter, $options );
+	}
+
+	/**
+	 * Return a POST parameter by name.
+	 *
+	 * @param string $name Parameter name.
+	 * @param mixed $default Default value.
+	 *
+	 * @return mixed
+	 */
+	public function post( $name, $default = null ) {
+		return isset( $this->post_data[ $name ] ) ? $this->post_data[ $name ] : $default;
 	}
 }

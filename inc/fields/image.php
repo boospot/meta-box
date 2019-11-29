@@ -19,49 +19,6 @@ class RWMB_Image_Field extends RWMB_File_Field {
 	}
 
 	/**
-	 * Get HTML for uploaded file.
-	 *
-	 * @param int   $file  Attachment (file) ID.
-	 * @param int   $index File index.
-	 * @param array $field Field data.
-	 *
-	 * @return string
-	 */
-	protected static function file_html( $file, $index, $field ) {
-		$attributes = self::get_attributes( $field, $file );
-
-		$edit_link = get_edit_post_link( $file );
-		if ( $edit_link ) {
-			$edit_link = sprintf( '<a href="%s" class="rwmb-image-edit" target="_blank"><span class="dashicons dashicons-edit"></span></a>', $edit_link );
-		}
-
-		return sprintf(
-			'<li class="rwmb-image-item attachment %s">
-				<input type="hidden" name="%s[%s]" value="%s">
-				<div class="attachment-preview">
-					<div class="thumbnail">
-						<div class="centered">
-							%s
-						</div>
-					</div>
-				</div>
-				<div class="rwmb-image-overlay"></div>
-				<div class="rwmb-image-actions">
-					%s
-					<a href="#" class="rwmb-image-delete rwmb-file-delete" data-attachment_id="%s"><span class="dashicons dashicons-no-alt"></span></a>
-				</div>
-			</li>',
-			esc_attr( $field['image_size'] ),
-			$attributes['name'],
-			$index,
-			$file,
-			wp_get_attachment_image( $file, $field['image_size'] ),
-			$edit_link,
-			$file
-		);
-	}
-
-	/**
 	 * Normalize field settings.
 	 *
 	 * @param array $field Field settings.
@@ -69,8 +26,8 @@ class RWMB_Image_Field extends RWMB_File_Field {
 	 * @return array
 	 */
 	public static function normalize( $field ) {
-		$field = parent::normalize( $field );
-		$field = wp_parse_args(
+		$field               = parent::normalize( $field );
+		$field               = wp_parse_args(
 			$field,
 			array(
 				'image_size' => 'thumbnail',
@@ -89,9 +46,9 @@ class RWMB_Image_Field extends RWMB_File_Field {
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param array    $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param array $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -103,14 +60,15 @@ class RWMB_Image_Field extends RWMB_File_Field {
 		if ( ! empty( $args['link'] ) ) {
 			$output = sprintf( '<a href="%s" title="%s">%s</a>', esc_url( $value['full_url'] ), esc_attr( $value['title'] ), $output );
 		}
+
 		return $output;
 	}
 
 	/**
 	 * Get uploaded file information.
 	 *
-	 * @param int   $file  Attachment image ID (post ID). Required.
-	 * @param array $args  Array of arguments (for size).
+	 * @param int $file Attachment image ID (post ID). Required.
+	 * @param array $args Array of arguments (for size).
 	 * @param array $field Field settings.
 	 *
 	 * @return array|bool False if file not found. Array of image info on success.
@@ -151,5 +109,48 @@ class RWMB_Image_Field extends RWMB_File_Field {
 		$info['height'] = $image[2];
 
 		return $info;
+	}
+
+	/**
+	 * Get HTML for uploaded file.
+	 *
+	 * @param int $file Attachment (file) ID.
+	 * @param int $index File index.
+	 * @param array $field Field data.
+	 *
+	 * @return string
+	 */
+	protected static function file_html( $file, $index, $field ) {
+		$attributes = self::get_attributes( $field, $file );
+
+		$edit_link = get_edit_post_link( $file );
+		if ( $edit_link ) {
+			$edit_link = sprintf( '<a href="%s" class="rwmb-image-edit" target="_blank"><span class="dashicons dashicons-edit"></span></a>', $edit_link );
+		}
+
+		return sprintf(
+			'<li class="rwmb-image-item attachment %s">
+				<input type="hidden" name="%s[%s]" value="%s">
+				<div class="attachment-preview">
+					<div class="thumbnail">
+						<div class="centered">
+							%s
+						</div>
+					</div>
+				</div>
+				<div class="rwmb-image-overlay"></div>
+				<div class="rwmb-image-actions">
+					%s
+					<a href="#" class="rwmb-image-delete rwmb-file-delete" data-attachment_id="%s"><span class="dashicons dashicons-no-alt"></span></a>
+				</div>
+			</li>',
+			esc_attr( $field['image_size'] ),
+			$attributes['name'],
+			$index,
+			$file,
+			wp_get_attachment_image( $file, $field['image_size'] ),
+			$edit_link,
+			$file
+		);
 	}
 }

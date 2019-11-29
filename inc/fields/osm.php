@@ -19,13 +19,17 @@ class RWMB_OSM_Field extends RWMB_Field {
 		wp_enqueue_script( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.js', array(), '1.5.1', true );
 
 		wp_enqueue_style( 'rwmb-osm', RWMB_CSS_URL . 'osm.css', array( 'leaflet' ), RWMB_VER );
-		wp_enqueue_script( 'rwmb-osm', RWMB_JS_URL . 'osm.js', array( 'jquery', 'jquery-ui-autocomplete', 'leaflet' ), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-osm', RWMB_JS_URL . 'osm.js', array(
+			'jquery',
+			'jquery-ui-autocomplete',
+			'leaflet'
+		), RWMB_VER, true );
 
 		RWMB_Helpers_Field::localize_script_once(
 			'rwmb-osm',
 			'RWMB_Osm',
 			array(
-				'no_results_string' =>esc_html__( 'No results found', 'meta-box' ),
+				'no_results_string' => esc_html__( 'No results found', 'meta-box' ),
 			)
 		);
 	}
@@ -33,7 +37,7 @@ class RWMB_OSM_Field extends RWMB_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -87,15 +91,16 @@ class RWMB_OSM_Field extends RWMB_Field {
 	 * The difference between this function and 'meta' function is 'meta' function always returns the escaped value
 	 * of the field saved in the database, while this function returns more meaningful value of the field.
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Not used for this field.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Not used for this field.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return mixed Array(latitude, longitude, zoom)
 	 */
 	public static function get_value( $field, $args = array(), $post_id = null ) {
-		$value                               = parent::get_value( $field, $args, $post_id );
+		$value = parent::get_value( $field, $args, $post_id );
 		list( $latitude, $longitude, $zoom ) = explode( ',', $value . ',,' );
+
 		return compact( 'latitude', 'longitude', 'zoom' );
 	}
 
@@ -103,14 +108,15 @@ class RWMB_OSM_Field extends RWMB_Field {
 	 * Output the field value.
 	 * Display Open Street Map using Leaflet
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Additional arguments for the map.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Additional arguments for the map.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string HTML output of the field
 	 */
 	public static function the_value( $field, $args = array(), $post_id = null ) {
 		$value = parent::get_value( $field, $args, $post_id );
+
 		return self::render_map( $value, $args );
 	}
 
@@ -118,7 +124,7 @@ class RWMB_OSM_Field extends RWMB_Field {
 	 * Render a map in the frontend.
 	 *
 	 * @param array $location The [latitude, longitude[, zoom]] location.
-	 * @param array $args     Additional arguments for the map.
+	 * @param array $args Additional arguments for the map.
 	 *
 	 * @return string
 	 */
@@ -144,7 +150,10 @@ class RWMB_OSM_Field extends RWMB_Field {
 
 		wp_enqueue_style( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css', array(), '1.5.1' );
 		wp_enqueue_script( 'leaflet', 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.js', array(), '1.5.1', true );
-		wp_enqueue_script( 'rwmb-osm-frontend', RWMB_JS_URL . 'osm-frontend.js', array( 'jquery', 'leaflet' ), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-osm-frontend', RWMB_JS_URL . 'osm-frontend.js', array(
+			'jquery',
+			'leaflet'
+		), RWMB_VER, true );
 
 		/*
 		 * More Open Street Map options
@@ -164,6 +173,7 @@ class RWMB_OSM_Field extends RWMB_Field {
 			esc_attr( $args['width'] ),
 			esc_attr( $args['height'] )
 		);
+
 		return $output;
 	}
 }

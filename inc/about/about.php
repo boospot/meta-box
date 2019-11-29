@@ -52,7 +52,37 @@ class RWMB_About {
 	 */
 	public function plugin_links( $links ) {
 		$links[] = '<a href="' . esc_url( $this->get_menu_link() ) . '">' . esc_html__( 'About', 'meta-box' ) . '</a>';
+
 		return $links;
+	}
+
+	/**
+	 * Get link to the plugin admin menu.
+	 *
+	 * @return string
+	 */
+	protected function get_menu_link() {
+		$menu = $this->has_menu() ? 'admin.php?page=meta-box' : $this->get_parent_menu() . '?page=meta-box';
+
+		return admin_url( $menu );
+	}
+
+	/**
+	 * Check if the plugin has a top-level admin menu.
+	 *
+	 * @return bool
+	 */
+	protected function has_menu() {
+		return apply_filters( 'rwmb_admin_menu', false );
+	}
+
+	/**
+	 * Get default parent menu, which is Plugins.
+	 *
+	 * @return string
+	 */
+	protected function get_parent_menu() {
+		return 'plugins.php';
 	}
 
 	/**
@@ -63,8 +93,8 @@ class RWMB_About {
 			return;
 		}
 		add_menu_page(
-		esc_html__( 'Meta Box', 'meta-box' ),
-		esc_html__( 'Meta Box', 'meta-box' ),
+			esc_html__( 'Meta Box', 'meta-box' ),
+			esc_html__( 'Meta Box', 'meta-box' ),
 			'activate_plugins',
 			'meta-box',
 			'__return_null',
@@ -79,8 +109,8 @@ class RWMB_About {
 		$parent_menu = $this->has_menu() ? 'meta-box' : $this->get_parent_menu();
 		$about       = add_submenu_page(
 			$parent_menu,
-		esc_html__( 'Welcome to Meta Box', 'meta-box' ),
-		esc_html__( 'Dashboard', 'meta-box' ),
+			esc_html__( 'Welcome to Meta Box', 'meta-box' ),
+			esc_html__( 'Dashboard', 'meta-box' ),
 			'activate_plugins',
 			'meta-box',
 			array( $this, 'render' )
@@ -97,6 +127,14 @@ class RWMB_About {
 	}
 
 	/**
+	 * Enqueue CSS and JS.
+	 */
+	public function enqueue() {
+		wp_enqueue_style( 'meta-box-about', RWMB_URL . 'inc/about/css/about.css', array(), RWMB_VER );
+		wp_enqueue_script( 'meta-box-about', RWMB_URL . 'inc/about/js/about.js', array( 'jquery' ), RWMB_VER, true );
+	}
+
+	/**
 	 * Hide about page from the admin menu.
 	 */
 	public function hide_page() {
@@ -108,11 +146,11 @@ class RWMB_About {
 	 */
 	public function render() {
 		?>
-		<div class="wrap">
-			<div id="poststuff">
-				<div id="post-body" class="metabox-holder columns-2">
-					<div id="post-body-content">
-						<div class="about-wrap">
+        <div class="wrap">
+            <div id="poststuff">
+                <div id="post-body" class="metabox-holder columns-2">
+                    <div id="post-body-content">
+                        <div class="about-wrap">
 							<?php
 							include dirname( __FILE__ ) . '/sections/welcome.php';
 							include dirname( __FILE__ ) . '/sections/tabs.php';
@@ -121,28 +159,20 @@ class RWMB_About {
 							include dirname( __FILE__ ) . '/sections/support.php';
 							do_action( 'rwmb_about_tabs_content' );
 							?>
-						</div>
-					</div>
-					<div id="postbox-container-1" class="postbox-container">
+                        </div>
+                    </div>
+                    <div id="postbox-container-1" class="postbox-container">
 						<?php
 						include dirname( __FILE__ ) . '/sections/newsletter.php';
 						if ( ! $this->update_checker->has_extensions() ) {
 							include dirname( __FILE__ ) . '/sections/upgrade.php';
 						}
 						?>
-					</div>
-				</div>
-			</div>
-		</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<?php
-	}
-
-	/**
-	 * Enqueue CSS and JS.
-	 */
-	public function enqueue() {
-		wp_enqueue_style( 'meta-box-about', RWMB_URL . 'inc/about/css/about.css', array(), RWMB_VER );
-		wp_enqueue_script( 'meta-box-about', RWMB_URL . 'inc/about/js/about.js', array( 'jquery' ), RWMB_VER, true );
 	}
 
 	/**
@@ -150,14 +180,14 @@ class RWMB_About {
 	 */
 	public function change_footer_text() {
 		// Translators: %1$s - link to review form.
-		echo wp_kses_post( sprintf(esc_html__( 'Please rate <strong>Meta Box</strong> <a href="%1$s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%1$s" target="_blank">WordPress.org</a> to help us spread the word. Thank you from the Meta Box team!', 'meta-box' ), 'https://wordpress.org/support/view/plugin-reviews/meta-box?filter=5#new-post' ) );
+		echo wp_kses_post( sprintf( esc_html__( 'Please rate <strong>Meta Box</strong> <a href="%1$s" target="_blank">&#9733;&#9733;&#9733;&#9733;&#9733;</a> on <a href="%1$s" target="_blank">WordPress.org</a> to help us spread the word. Thank you from the Meta Box team!', 'meta-box' ), 'https://wordpress.org/support/view/plugin-reviews/meta-box?filter=5#new-post' ) );
 	}
 
 	/**
 	 * Redirect to about page after Meta Box has been activated.
 	 *
-	 * @param string $plugin       Path to the main plugin file from plugins directory.
-	 * @param bool   $network_wide Whether to enable the plugin for all sites in the network
+	 * @param string $plugin Path to the main plugin file from plugins directory.
+	 * @param bool $network_wide Whether to enable the plugin for all sites in the network
 	 *                             or just the current site. Multisite only. Default is false.
 	 */
 	public function redirect( $plugin, $network_wide = false ) {
@@ -165,34 +195,6 @@ class RWMB_About {
 			wp_safe_redirect( $this->get_menu_link() );
 			die;
 		}
-	}
-
-	/**
-	 * Get link to the plugin admin menu.
-	 *
-	 * @return string
-	 */
-	protected function get_menu_link() {
-		$menu = $this->has_menu() ? 'admin.php?page=meta-box' : $this->get_parent_menu() . '?page=meta-box';
-		return admin_url( $menu );
-	}
-
-	/**
-	 * Get default parent menu, which is Plugins.
-	 *
-	 * @return string
-	 */
-	protected function get_parent_menu() {
-		return 'plugins.php';
-	}
-
-	/**
-	 * Check if the plugin has a top-level admin menu.
-	 *
-	 * @return bool
-	 */
-	protected function has_menu() {
-		return apply_filters( 'rwmb_admin_menu', false );
 	}
 
 	/**
@@ -205,6 +207,7 @@ class RWMB_About {
 				return true;
 			}
 		}
+
 		return false;
 	}
 }

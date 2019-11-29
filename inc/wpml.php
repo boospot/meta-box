@@ -42,9 +42,10 @@ class RWMB_WPML {
 	/**
 	 * Translating IDs stored as field values upon WPML post/page duplication.
 	 *
-	 * @param mixed  $value           Meta value.
+	 * @param mixed $value Meta value.
 	 * @param string $target_language Target language.
-	 * @param array  $meta_data       Meta arguments.
+	 * @param array $meta_data Meta arguments.
+	 *
 	 * @return mixed
 	 */
 	public function translate_ids( $value, $target_language, $meta_data ) {
@@ -63,6 +64,7 @@ class RWMB_WPML {
 		// Translating values, whether are stored as comma separated strings or not.
 		if ( false === strpos( $value, ',' ) ) {
 			$value = apply_filters( 'wpml_object_id', $value, $object_type, true, $target_language );
+
 			return $value;
 		}
 
@@ -75,6 +77,7 @@ class RWMB_WPML {
 		}
 
 		$value = implode( ',', $translated_values );
+
 		return $value;
 	}
 

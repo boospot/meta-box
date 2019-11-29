@@ -1,7 +1,7 @@
 <?php
-add_filter( 'rwmb_meta_boxes', function( $meta_boxes ) {
+add_filter( 'rwmb_meta_boxes', function ( $meta_boxes ) {
 	$meta_boxes[] = [
-		'title' => 'No clone',
+		'title'  => 'No clone',
 		'fields' => [
 			[
 				'type' => 'taxonomy_advanced',
@@ -17,7 +17,7 @@ add_filter( 'rwmb_meta_boxes', function( $meta_boxes ) {
 		],
 	];
 	$meta_boxes[] = [
-		'title' => 'Clone',
+		'title'  => 'Clone',
 		'fields' => [
 			[
 				'type'              => 'taxonomy_advanced',
@@ -53,10 +53,11 @@ add_filter( 'rwmb_meta_boxes', function( $meta_boxes ) {
 			],
 		],
 	];
+
 	return $meta_boxes;
 } );
 
-add_filter( 'the_content', function( $content ) {
+add_filter( 'the_content', function ( $content ) {
 	if ( ! is_single() ) {
 		return $content;
 	}

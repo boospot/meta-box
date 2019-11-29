@@ -12,10 +12,10 @@ class RWMB_Taxonomy_Advanced_Field extends RWMB_Taxonomy_Field {
 	/**
 	 * Save terms in form of comma-separated IDs.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return string
 	 */
@@ -28,10 +28,10 @@ class RWMB_Taxonomy_Advanced_Field extends RWMB_Taxonomy_Field {
 	/**
 	 * Save meta value.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 */
 	public static function save( $new, $old, $post_id, $field ) {
 		$field['multiple'] = false; // Force to save in 1 row in the database.
@@ -41,9 +41,9 @@ class RWMB_Taxonomy_Advanced_Field extends RWMB_Taxonomy_Field {
 	/**
 	 * Get raw meta value.
 	 *
-	 * @param int   $object_id Object ID.
-	 * @param array $field     Field parameters.
-	 * @param array $args      Arguments of {@see rwmb_meta()} helper.
+	 * @param int $object_id Object ID.
+	 * @param array $field Field parameters.
+	 * @param array $args Arguments of {@see rwmb_meta()} helper.
 	 *
 	 * @return mixed
 	 */
@@ -66,9 +66,9 @@ class RWMB_Taxonomy_Advanced_Field extends RWMB_Taxonomy_Field {
 	 * Get the field value.
 	 * Return list of post term objects.
 	 *
-	 * @param  array    $field   Field parameters.
-	 * @param  array    $args    Additional arguments.
-	 * @param  int|null $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param array $args Additional arguments.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return array List of post term objects.
 	 */
@@ -90,9 +90,9 @@ class RWMB_Taxonomy_Advanced_Field extends RWMB_Taxonomy_Field {
 	/**
 	 * Get terms information.
 	 *
-	 * @param array  $field    Field parameters.
+	 * @param array $field Field parameters.
 	 * @param string $term_ids Term IDs, in CSV format.
-	 * @param array  $args     Additional arguments (for image size).
+	 * @param array $args Additional arguments (for image size).
 	 *
 	 * @return array
 	 */
@@ -110,6 +110,7 @@ class RWMB_Taxonomy_Advanced_Field extends RWMB_Taxonomy_Field {
 
 		$info = get_terms( $field['taxonomy'], $args );
 		$info = is_array( $info ) ? $info : array();
+
 		return $field['multiple'] ? $info : reset( $info );
 	}
 }

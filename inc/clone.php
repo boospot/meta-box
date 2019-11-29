@@ -12,7 +12,7 @@ class RWMB_Clone {
 	/**
 	 * Get clone field HTML.
 	 *
-	 * @param mixed $meta  The meta value.
+	 * @param mixed $meta The meta value.
 	 * @param array $field The field parameters.
 	 *
 	 * @return string
@@ -40,7 +40,7 @@ class RWMB_Clone {
 			}
 
 			if ( in_array( $sub_field['type'], array( 'file', 'image' ), true ) ) {
-				$sub_field['input_name']  = '_file_' . uniqid();
+				$sub_field['input_name'] = '_file_' . uniqid();
 				$sub_field['index_name'] .= "[{$index}]";
 			} elseif ( $field['multiple'] ) {
 				$sub_field['field_name'] .= '[]';
@@ -50,14 +50,14 @@ class RWMB_Clone {
 			$class     = "rwmb-clone rwmb-{$field['type']}-clone";
 			$sort_icon = '';
 			if ( $field['sort_clone'] ) {
-				$class    .= ' rwmb-sort-clone';
+				$class     .= ' rwmb-sort-clone';
 				$sort_icon = "<a href='javascript:;' class='rwmb-clone-icon'></a>";
 			}
 			$input_html = "<div class='$class'>" . $sort_icon;
 
 			// Call separated methods for displaying each type of field.
 			$input_html .= RWMB_Field::call( $sub_field, 'html', $sub_meta );
-			$input_html  = RWMB_Field::filter( 'html', $input_html, $sub_field, $sub_meta );
+			$input_html = RWMB_Field::filter( 'html', $input_html, $sub_field, $sub_meta );
 
 			// Remove clone button.
 			$input_html .= self::remove_clone_button( $sub_field );
@@ -70,12 +70,25 @@ class RWMB_Clone {
 	}
 
 	/**
+	 * Remove clone button.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return string $html
+	 */
+	public static function remove_clone_button( $field ) {
+		$text = RWMB_Field::filter( 'remove_clone_button_text', '<span class="dashicons dashicons-dismiss"></span>', $field );
+
+		return '<a href="#" class="rwmb-button remove-clone">' . $text . '</a>';
+	}
+
+	/**
 	 * Set value of meta before saving into database
 	 *
-	 * @param mixed $new       The submitted meta value.
-	 * @param mixed $old       The existing meta value.
-	 * @param int   $object_id The object ID.
-	 * @param array $field     The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $object_id The object ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return mixed
 	 */
@@ -107,6 +120,7 @@ class RWMB_Clone {
 	 * Add clone button.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string $html
 	 */
 	public static function add_clone_button( $field ) {
@@ -114,17 +128,7 @@ class RWMB_Clone {
 			return '';
 		}
 		$text = RWMB_Field::filter( 'add_clone_button_text', $field['add_button'], $field );
-		return '<a href="#" class="rwmb-button button-primary add-clone">' . esc_html( $text ) . '</a>';
-	}
 
-	/**
-	 * Remove clone button.
-	 *
-	 * @param array $field Field parameters.
-	 * @return string $html
-	 */
-	public static function remove_clone_button( $field ) {
-		$text = RWMB_Field::filter( 'remove_clone_button_text', '<span class="dashicons dashicons-dismiss"></span>', $field );
-		return '<a href="#" class="rwmb-button remove-clone">' . $text . '</a>';
+		return '<a href="#" class="rwmb-button button-primary add-clone">' . esc_html( $text ) . '</a>';
 	}
 }

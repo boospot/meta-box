@@ -18,26 +18,54 @@ class RWMB_Media_Field extends RWMB_File_Field {
 			wp_register_script( 'media-grid', includes_url( 'js/media-grid.min.js' ), array( 'media-editor' ), '4.9.7', true );
 		}
 		wp_enqueue_style( 'rwmb-media', RWMB_CSS_URL . 'media.css', array(), RWMB_VER );
-		wp_enqueue_script( 'rwmb-media', RWMB_JS_URL . 'media.js', array( 'jquery-ui-sortable', 'underscore', 'backbone', 'media-grid' ), RWMB_VER, true );
+		wp_enqueue_script( 'rwmb-media', RWMB_JS_URL . 'media.js', array(
+			'jquery-ui-sortable',
+			'underscore',
+			'backbone',
+			'media-grid'
+		), RWMB_VER, true );
 
 		RWMB_Helpers_Field::localize_script_once(
 			'rwmb-media',
 			'i18nRwmbMedia',
 			array(
-				'add'                => apply_filters( 'rwmb_media_add_string',esc_html_x( '+ Add Media', 'media', 'meta-box' ) ),
-				'single'             => apply_filters( 'rwmb_media_single_files_string',esc_html_x( ' file', 'media', 'meta-box' ) ),
-				'multiple'           => apply_filters( 'rwmb_media_multiple_files_string',esc_html_x( ' files', 'media', 'meta-box' ) ),
-				'remove'             => apply_filters( 'rwmb_media_remove_string',esc_html_x( 'Remove', 'media', 'meta-box' ) ),
-				'edit'               => apply_filters( 'rwmb_media_edit_string',esc_html_x( 'Edit', 'media', 'meta-box' ) ),
-				'view'               => apply_filters( 'rwmb_media_view_string',esc_html_x( 'View', 'media', 'meta-box' ) ),
-				'noTitle'            =>esc_html_x( 'No Title', 'media', 'meta-box' ),
+				'add'                => apply_filters( 'rwmb_media_add_string', esc_html_x( '+ Add Media', 'media', 'meta-box' ) ),
+				'single'             => apply_filters( 'rwmb_media_single_files_string', esc_html_x( ' file', 'media', 'meta-box' ) ),
+				'multiple'           => apply_filters( 'rwmb_media_multiple_files_string', esc_html_x( ' files', 'media', 'meta-box' ) ),
+				'remove'             => apply_filters( 'rwmb_media_remove_string', esc_html_x( 'Remove', 'media', 'meta-box' ) ),
+				'edit'               => apply_filters( 'rwmb_media_edit_string', esc_html_x( 'Edit', 'media', 'meta-box' ) ),
+				'view'               => apply_filters( 'rwmb_media_view_string', esc_html_x( 'View', 'media', 'meta-box' ) ),
+				'noTitle'            => esc_html_x( 'No Title', 'media', 'meta-box' ),
 				'loadingUrl'         => admin_url( 'images/spinner.gif' ),
 				'extensions'         => self::get_mime_extensions(),
-				'select'             => apply_filters( 'rwmb_media_select_string',esc_html_x( 'Select Files', 'media', 'meta-box' ) ),
-				'or'                 => apply_filters( 'rwmb_media_or_string',esc_html_x( 'or', 'media', 'meta-box' ) ),
-				'uploadInstructions' => apply_filters( 'rwmb_media_upload_instructions_string',esc_html_x( 'Drop files here to upload', 'media', 'meta-box' ) ),
+				'select'             => apply_filters( 'rwmb_media_select_string', esc_html_x( 'Select Files', 'media', 'meta-box' ) ),
+				'or'                 => apply_filters( 'rwmb_media_or_string', esc_html_x( 'or', 'media', 'meta-box' ) ),
+				'uploadInstructions' => apply_filters( 'rwmb_media_upload_instructions_string', esc_html_x( 'Drop files here to upload', 'media', 'meta-box' ) ),
 			)
 		);
+	}
+
+	/**
+	 * Get supported mime extensions.
+	 *
+	 * @return array
+	 */
+	protected static function get_mime_extensions() {
+		$mime_types = wp_get_mime_types();
+		$extensions = array();
+		foreach ( $mime_types as $ext => $mime ) {
+			$ext                 = explode( '|', $ext );
+			$extensions[ $mime ] = $ext;
+
+			$mime_parts = explode( '/', $mime );
+			if ( empty( $extensions[ $mime_parts[0] ] ) ) {
+				$extensions[ $mime_parts[0] ] = array();
+			}
+			$extensions[ $mime_parts[0] ]        = array_merge( $extensions[ $mime_parts[0] ], $ext );
+			$extensions[ $mime_parts[0] . '/*' ] = $extensions[ $mime_parts[0] ];
+		}
+
+		return $extensions;
 	}
 
 	/**
@@ -52,9 +80,9 @@ class RWMB_Media_Field extends RWMB_File_Field {
 	/**
 	 * Get meta value.
 	 *
-	 * @param int   $post_id Post ID.
-	 * @param bool  $saved   Whether the meta box is saved at least once.
-	 * @param array $field   Field parameters.
+	 * @param int $post_id Post ID.
+	 * @param bool $saved Whether the meta box is saved at least once.
+	 * @param array $field Field parameters.
 	 *
 	 * @return mixed
 	 */
@@ -81,7 +109,7 @@ class RWMB_Media_Field extends RWMB_File_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -170,50 +198,28 @@ class RWMB_Media_Field extends RWMB_File_Field {
 	}
 
 	/**
-	 * Get supported mime extensions.
-	 *
-	 * @return array
-	 */
-	protected static function get_mime_extensions() {
-		$mime_types = wp_get_mime_types();
-		$extensions = array();
-		foreach ( $mime_types as $ext => $mime ) {
-			$ext                 = explode( '|', $ext );
-			$extensions[ $mime ] = $ext;
-
-			$mime_parts = explode( '/', $mime );
-			if ( empty( $extensions[ $mime_parts[0] ] ) ) {
-				$extensions[ $mime_parts[0] ] = array();
-			}
-			$extensions[ $mime_parts[0] ]        = array_merge( $extensions[ $mime_parts[0] ], $ext );
-			$extensions[ $mime_parts[0] . '/*' ] = $extensions[ $mime_parts[0] ];
-		}
-
-		return $extensions;
-	}
-
-	/**
 	 * Get meta values to save.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return array|mixed
 	 */
 	public static function value( $new, $old, $post_id, $field ) {
 		$new = RWMB_Helpers_Array::from_csv( $new );
+
 		return array_filter( array_unique( array_map( 'absint', $new ) ) );
 	}
 
 	/**
 	 * Save meta value.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 */
 	public static function save( $new, $old, $post_id, $field ) {
 		if ( empty( $field['id'] ) || ! $field['save_field'] ) {

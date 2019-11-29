@@ -19,10 +19,10 @@ class RWMB_Sanitizer {
 	/**
 	 * Sanitize a field value.
 	 *
-	 * @param mixed $value     The submitted new value.
-	 * @param array $field     The field settings.
+	 * @param mixed $value The submitted new value.
+	 * @param array $field The field settings.
 	 * @param mixed $old_value The old field value in the database.
-	 * @param int   $object_id The object ID.
+	 * @param int $object_id The object ID.
 	 */
 	public function sanitize( $value, $field, $old_value = null, $object_id = null ) {
 		// Allow developers to bypass the sanitization.
@@ -38,7 +38,8 @@ class RWMB_Sanitizer {
 	/**
 	 * Get sanitize callback for a field.
 	 *
-	 * @param  array $field Field settings.
+	 * @param array $field Field settings.
+	 *
 	 * @return callable
 	 */
 	private function get_callback( $field ) {
@@ -104,7 +105,9 @@ class RWMB_Sanitizer {
 	 * This prevents using default value once the checkbox has been unchecked.
 	 *
 	 * @link https://github.com/rilwis/meta-box/issues/6
+	 *
 	 * @param string $value Checkbox value.
+	 *
 	 * @return int
 	 */
 	private function sanitize_checkbox( $value ) {
@@ -112,19 +115,78 @@ class RWMB_Sanitizer {
 	}
 
 	/**
-	 * Sanitize numeric value.
+	 * Sanitize value for a choice field.
 	 *
-	 * @param  string $value The number value.
-	 * @return string
+	 * @param string|array $value The submitted value.
+	 * @param array $field The field settings.
+	 *
+	 * @return string|array
 	 */
-	private function sanitize_number( $value ) {
-		return is_numeric( $value ) ? $value : '';
+	private function sanitize_choice( $value, $field ) {
+		$options = $field['options'];
+
+		return is_array( $value ) ? array_intersect( $value, array_keys( $options ) ) : ( isset( $options[ $value ] ) ? $value : '' );
+	}
+
+	/**
+	 * Sanitize background field.
+	 *
+	 * @param array $value The submitted value.
+	 *
+	 * @return array
+	 */
+	private function sanitize_background( $value ) {
+		$value          = wp_parse_args(
+			$value,
+			array(
+				'color'      => '',
+				'image'      => '',
+				'repeat'     => '',
+				'attachment' => '',
+				'position'   => '',
+				'size'       => '',
+			)
+		);
+		$value['color'] = $this->sanitize_color( $value['color'] );
+		$value['image'] = esc_url_raw( $value['image'] );
+
+		$value['repeat']     = in_array( $value['repeat'], array(
+			'no-repeat',
+			'repeat',
+			'repeat-x',
+			'repeat-y',
+			'inherit'
+		), true ) ? $value['repeat'] : '';
+		$value['position']   = in_array( $value['position'], array(
+			'top left',
+			'top center',
+			'top right',
+			'center left',
+			'center center',
+			'center right',
+			'bottom left',
+			'bottom center',
+			'bottom right'
+		), true ) ? $value['position'] : '';
+		$value['attachment'] = in_array( $value['attachment'], array(
+			'fixed',
+			'scroll',
+			'inherit'
+		), true ) ? $value['attachment'] : '';
+		$value['size']       = in_array( $value['size'], array(
+			'inherit',
+			'cover',
+			'contain'
+		), true ) ? $value['size'] : '';
+
+		return $value;
 	}
 
 	/**
 	 * Sanitize color value.
 	 *
 	 * @param string $value The color value.
+	 *
 	 * @return string
 	 */
 	private function sanitize_color( $value ) {
@@ -143,60 +205,10 @@ class RWMB_Sanitizer {
 	}
 
 	/**
-	 * Sanitize value for a choice field.
-	 *
-	 * @param  string|array $value The submitted value.
-	 * @param  array        $field The field settings.
-	 * @return string|array
-	 */
-	private function sanitize_choice( $value, $field ) {
-		$options = $field['options'];
-		return is_array( $value ) ? array_intersect( $value, array_keys( $options ) ) : ( isset( $options[ $value ] ) ? $value : '' );
-	}
-
-	/**
-	 * Sanitize object & media field.
-	 *
-	 * @param  int|array $value The submitted value.
-	 * @return int|array
-	 */
-	private function sanitize_object( $value ) {
-		return is_array( $value ) ? array_filter( array_map( 'absint', $value ) ) : ( $value ? absint( $value ) : '' );
-	}
-
-	/**
-	 * Sanitize background field.
-	 *
-	 * @param  array $value The submitted value.
-	 * @return array
-	 */
-	private function sanitize_background( $value ) {
-		$value          = wp_parse_args(
-			$value,
-			array(
-				'color'      => '',
-				'image'      => '',
-				'repeat'     => '',
-				'attachment' => '',
-				'position'   => '',
-				'size'       => '',
-			)
-		);
-		$value['color'] = $this->sanitize_color( $value['color'] );
-		$value['image'] = esc_url_raw( $value['image'] );
-
-		$value['repeat']     = in_array( $value['repeat'], array( 'no-repeat', 'repeat', 'repeat-x', 'repeat-y', 'inherit' ), true ) ? $value['repeat'] : '';
-		$value['position']   = in_array( $value['position'], array( 'top left', 'top center', 'top right', 'center left', 'center center', 'center right', 'bottom left', 'bottom center', 'bottom right' ), true ) ? $value['position'] : '';
-		$value['attachment'] = in_array( $value['attachment'], array( 'fixed', 'scroll', 'inherit' ), true ) ? $value['attachment'] : '';
-		$value['size']       = in_array( $value['size'], array( 'inherit', 'cover', 'contain' ), true ) ? $value['size'] : '';
-
-		return $value;
-	}
-
-	/**
 	 * Sanitize text field.
 	 *
-	 * @param  string|array $value The submitted value.
+	 * @param string|array $value The submitted value.
+	 *
 	 * @return string|array
 	 */
 	private function sanitize_text( $value ) {
@@ -206,8 +218,9 @@ class RWMB_Sanitizer {
 	/**
 	 * Sanitize file, image field.
 	 *
-	 * @param  array $value The submitted value.
-	 * @param  array $field The field settings.
+	 * @param array $value The submitted value.
+	 * @param array $field The field settings.
+	 *
 	 * @return array
 	 */
 	private function sanitize_file( $value, $field ) {
@@ -215,10 +228,22 @@ class RWMB_Sanitizer {
 	}
 
 	/**
+	 * Sanitize object & media field.
+	 *
+	 * @param int|array $value The submitted value.
+	 *
+	 * @return int|array
+	 */
+	private function sanitize_object( $value ) {
+		return is_array( $value ) ? array_filter( array_map( 'absint', $value ) ) : ( $value ? absint( $value ) : '' );
+	}
+
+	/**
 	 * Sanitize slider field.
 	 *
-	 * @param  mixed $value The submitted value.
-	 * @param  array $field The field settings.
+	 * @param mixed $value The submitted value.
+	 * @param array $field The field settings.
+	 *
 	 * @return string|int|float
 	 */
 	private function sanitize_slider( $value, $field ) {
@@ -226,10 +251,22 @@ class RWMB_Sanitizer {
 	}
 
 	/**
+	 * Sanitize numeric value.
+	 *
+	 * @param string $value The number value.
+	 *
+	 * @return string
+	 */
+	private function sanitize_number( $value ) {
+		return is_numeric( $value ) ? $value : '';
+	}
+
+	/**
 	 * Sanitize datetime field.
 	 *
-	 * @param  mixed $value The submitted value.
-	 * @param  array $field The field settings.
+	 * @param mixed $value The submitted value.
+	 * @param array $field The field settings.
+	 *
 	 * @return float|string
 	 */
 	private function sanitize_datetime( $value, $field ) {
@@ -239,11 +276,12 @@ class RWMB_Sanitizer {
 	/**
 	 * Sanitize map field.
 	 *
-	 * @param  mixed $value The submitted value.
+	 * @param mixed $value The submitted value.
+	 *
 	 * @return string
 	 */
 	private function sanitize_map( $value ) {
-		$value                               = sanitize_text_field( $value );
+		$value = sanitize_text_field( $value );
 		list( $latitude, $longitude, $zoom ) = explode( ',', $value . ',,' );
 
 		$latitude  = (float) $latitude;
@@ -256,7 +294,8 @@ class RWMB_Sanitizer {
 	/**
 	 * Sanitize taxonomy advanced field.
 	 *
-	 * @param  mixed $value The submitted value.
+	 * @param mixed $value The submitted value.
+	 *
 	 * @return string
 	 */
 	private function sanitize_taxonomy_advanced( $value ) {
@@ -269,7 +308,8 @@ class RWMB_Sanitizer {
 	/**
 	 * Sanitize URL field.
 	 *
-	 * @param  string $value The submitted value.
+	 * @param string $value The submitted value.
+	 *
 	 * @return string
 	 */
 	private function sanitize_url( $value ) {

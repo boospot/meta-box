@@ -12,13 +12,15 @@ class RWMB_Select_Tree_Field extends RWMB_Select_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
 		$options = self::transform_options( $field['options'] );
 		$walker  = new RWMB_Walker_Select_Tree( $field, $meta );
+
 		return $options ? $walker->walk( $options ) : '';
 	}
 
@@ -35,6 +37,7 @@ class RWMB_Select_Tree_Field extends RWMB_Select_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {

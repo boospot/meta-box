@@ -9,8 +9,8 @@ if ( ! function_exists( 'rwmb_meta' ) ) {
 	/**
 	 * Get post meta.
 	 *
-	 * @param string   $key     Meta key. Required.
-	 * @param array    $args    Array of arguments. Optional.
+	 * @param string $key Meta key. Required.
+	 * @param array $args Array of arguments. Optional.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return mixed
@@ -29,6 +29,7 @@ if ( ! function_exists( 'rwmb_meta' ) ) {
 		$meta = in_array( $field['type'], array( 'oembed', 'map', 'osm' ), true ) ?
 			rwmb_the_value( $key, $args, $post_id, false ) :
 			rwmb_get_value( $key, $args, $post_id );
+
 		return apply_filters( 'rwmb_meta', $meta, $key, $args, $post_id );
 	}
 }
@@ -37,8 +38,8 @@ if ( ! function_exists( 'rwmb_get_field_settings' ) ) {
 	/**
 	 * Get field settings.
 	 *
-	 * @param string   $key       Meta key. Required.
-	 * @param array    $args      Array of arguments. Optional.
+	 * @param string $key Meta key. Required.
+	 * @param array $args Array of arguments. Optional.
 	 * @param int|null $object_id Object ID. null for current post. Optional.
 	 *
 	 * @return array
@@ -71,8 +72,8 @@ if ( ! function_exists( 'rwmb_meta_legacy' ) ) {
 	/**
 	 * Get post meta.
 	 *
-	 * @param string   $key     Meta key. Required.
-	 * @param array    $args    Array of arguments. Optional.
+	 * @param string $key Meta key. Required.
+	 * @param array $args Array of arguments. Optional.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return mixed
@@ -116,9 +117,9 @@ if ( ! function_exists( 'rwmb_get_value' ) ) {
 	 * Get value of custom field.
 	 * This is used to replace old version of rwmb_meta key.
 	 *
-	 * @param  string   $field_id Field ID. Required.
-	 * @param  array    $args     Additional arguments. Rarely used. See specific fields for details.
-	 * @param  int|null $post_id  Post ID. null for current post. Optional.
+	 * @param string $field_id Field ID. Required.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return mixed false if field doesn't exist. Field value otherwise.
 	 */
@@ -148,10 +149,10 @@ if ( ! function_exists( 'rwmb_the_value' ) ) {
 	/**
 	 * Display the value of a field
 	 *
-	 * @param  string   $field_id Field ID. Required.
-	 * @param  array    $args     Additional arguments. Rarely used. See specific fields for details.
-	 * @param  int|null $post_id  Post ID. null for current post. Optional.
-	 * @param  bool     $echo     Display field meta value? Default `true` which works in almost all cases. We use `false` for  the [rwmb_meta] shortcode.
+	 * @param string $field_id Field ID. Required.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
+	 * @param bool $echo Display field meta value? Default `true` which works in almost all cases. We use `false` for  the [rwmb_meta] shortcode.
 	 *
 	 * @return string
 	 */
@@ -188,8 +189,8 @@ if ( ! function_exists( 'rwmb_get_object_fields' ) ) {
 	/**
 	 * Get defined meta fields for object.
 	 *
-	 * @param int|string $type_or_id  Object ID or post type / taxonomy (for terms) / user (for users).
-	 * @param string     $object_type Object type. Use post, term.
+	 * @param int|string $type_or_id Object ID or post type / taxonomy (for terms) / user (for users).
+	 * @param string $object_type Object type. Use post, term.
 	 *
 	 * @return array
 	 */
@@ -213,9 +214,9 @@ if ( ! function_exists( 'rwmb_check_meta_box_supports' ) ) {
 	/**
 	 * Check if a meta box supports an object.
 	 *
-	 * @param  object $meta_box    Meta Box object.
-	 * @param  int    $key         Not used.
-	 * @param  array  $object_data Object data (type and ID).
+	 * @param object $meta_box Meta Box object.
+	 * @param int $key Not used.
+	 * @param array $object_data Object data (type and ID).
 	 */
 	function rwmb_check_meta_box_supports( &$meta_box, $key, $object_data ) {
 		list( $object_type, $type_or_id ) = $object_data;
@@ -246,6 +247,7 @@ if ( ! function_exists( 'rwmb_check_meta_box_supports' ) ) {
 		}
 		if ( ! $type ) {
 			$meta_box = false;
+
 			return;
 		}
 		if ( isset( $meta_box->meta_box[ $prop ] ) && ! in_array( $type, $meta_box->meta_box[ $prop ], true ) ) {
@@ -331,8 +333,9 @@ if ( ! function_exists( 'rwmb_get_storage' ) ) {
 	/**
 	 * Get storage instance.
 	 *
-	 * @param string      $object_type Object type. Use post or term.
-	 * @param RW_Meta_Box $meta_box    Meta box object. Optional.
+	 * @param string $object_type Object type. Use post or term.
+	 * @param RW_Meta_Box $meta_box Meta box object. Optional.
+	 *
 	 * @return RWMB_Storage_Interface
 	 */
 	function rwmb_get_storage( $object_type, $meta_box = null ) {
@@ -355,6 +358,7 @@ if ( ! function_exists( 'rwmb_request' ) ) {
 		if ( ! $request ) {
 			$request = new RWMB_Request();
 		}
+
 		return $request;
 	}
 }

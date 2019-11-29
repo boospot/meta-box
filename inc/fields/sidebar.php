@@ -20,7 +20,7 @@ class RWMB_Sidebar_Field extends RWMB_Object_Choice_Field {
 		$field = wp_parse_args(
 			$field,
 			array(
-				'placeholder' =>esc_html__( 'Select a sidebar', 'meta-box' ),
+				'placeholder' => esc_html__( 'Select a sidebar', 'meta-box' ),
 			)
 		);
 
@@ -32,7 +32,8 @@ class RWMB_Sidebar_Field extends RWMB_Object_Choice_Field {
 	/**
 	 * Get sidebars for field options.
 	 *
-	 * @param  array $field Field settings.
+	 * @param array $field Field settings.
+	 *
 	 * @return array        Field options array.
 	 */
 	public static function query( $field ) {
@@ -44,15 +45,16 @@ class RWMB_Sidebar_Field extends RWMB_Object_Choice_Field {
 				'label' => $sidebar['name'],
 			);
 		}
+
 		return $options;
 	}
 
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param string $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
@@ -63,6 +65,7 @@ class RWMB_Sidebar_Field extends RWMB_Object_Choice_Field {
 		}
 		ob_start();
 		dynamic_sidebar( $value );
+
 		return ob_get_clean();
 	}
 }

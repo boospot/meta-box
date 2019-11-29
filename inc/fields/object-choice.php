@@ -13,9 +13,9 @@ abstract class RWMB_Object_Choice_Field extends RWMB_Choice_Field {
 	 * Show field HTML.
 	 * Populate field options before showing to make sure query is made only once.
 	 *
-	 * @param array $field   Field parameters.
-	 * @param bool  $saved   Whether the meta box is saved at least once.
-	 * @param int   $post_id Post ID.
+	 * @param array $field Field parameters.
+	 * @param bool $saved Whether the meta box is saved at least once.
+	 * @param int $post_id Post ID.
 	 */
 	public static function show( $field, $saved, $post_id = 0 ) {
 		// Get unique saved IDs for ajax fields.
@@ -33,8 +33,9 @@ abstract class RWMB_Object_Choice_Field extends RWMB_Choice_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -48,9 +49,25 @@ abstract class RWMB_Object_Choice_Field extends RWMB_Choice_Field {
 	}
 
 	/**
+	 * Get correct rendering class for the field.
+	 *
+	 * @param array $field Field parameters.
+	 *
+	 * @return string
+	 */
+	protected static function get_type_class( $field ) {
+		return RWMB_Helpers_Field::get_class(
+			array(
+				'type' => $field['field_type'],
+			)
+		);
+	}
+
+	/**
 	 * Render "Add New" form
 	 *
 	 * @param array $field Field settings.
+	 *
 	 * @return string
 	 */
 	public static function add_new_form( $field ) {
@@ -92,6 +109,35 @@ abstract class RWMB_Object_Choice_Field extends RWMB_Choice_Field {
 	}
 
 	/**
+	 * Get the attributes for a field.
+	 *
+	 * @param array $field Field parameters.
+	 * @param mixed $value Meta value.
+	 *
+	 * @return array
+	 */
+	public static function get_attributes( $field, $value = null ) {
+		$attributes = call_user_func( array( self::get_type_class( $field ), 'get_attributes' ), $field, $value );
+		if ( 'select_advanced' === $field['field_type'] ) {
+			$attributes['class'] .= ' rwmb-select_advanced';
+		} elseif ( 'select' === $field['field_type'] ) {
+			$attributes['class'] .= ' rwmb-select';
+		}
+
+		return $attributes;
+	}
+
+	/**
+	 * Enqueue scripts and styles.
+	 */
+	public static function admin_enqueue_scripts() {
+		RWMB_Input_List_Field::admin_enqueue_scripts();
+		RWMB_Select_Field::admin_enqueue_scripts();
+		RWMB_Select_Tree_Field::admin_enqueue_scripts();
+		RWMB_Select_Advanced_Field::admin_enqueue_scripts();
+	}
+
+	/**
 	 * Set ajax parameters.
 	 *
 	 * @param array $field Field settings.
@@ -111,48 +157,6 @@ abstract class RWMB_Object_Choice_Field extends RWMB_Choice_Field {
 				'query_args' => $field['query_args'],
 			),
 			'_wpnonce' => wp_create_nonce( 'query' ),
-		);
-	}
-
-	/**
-	 * Get the attributes for a field.
-	 *
-	 * @param array $field Field parameters.
-	 * @param mixed $value Meta value.
-	 *
-	 * @return array
-	 */
-	public static function get_attributes( $field, $value = null ) {
-		$attributes = call_user_func( array( self::get_type_class( $field ), 'get_attributes' ), $field, $value );
-		if ( 'select_advanced' === $field['field_type'] ) {
-			$attributes['class'] .= ' rwmb-select_advanced';
-		} elseif ( 'select' === $field['field_type'] ) {
-			$attributes['class'] .= ' rwmb-select';
-		}
-		return $attributes;
-	}
-
-	/**
-	 * Enqueue scripts and styles.
-	 */
-	public static function admin_enqueue_scripts() {
-		RWMB_Input_List_Field::admin_enqueue_scripts();
-		RWMB_Select_Field::admin_enqueue_scripts();
-		RWMB_Select_Tree_Field::admin_enqueue_scripts();
-		RWMB_Select_Advanced_Field::admin_enqueue_scripts();
-	}
-
-	/**
-	 * Get correct rendering class for the field.
-	 *
-	 * @param array $field Field parameters.
-	 * @return string
-	 */
-	protected static function get_type_class( $field ) {
-		return RWMB_Helpers_Field::get_class(
-			array(
-				'type' => $field['field_type'],
-			)
 		);
 	}
 }

@@ -12,13 +12,15 @@ class RWMB_Range_Field extends RWMB_Number_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
-		$output  = parent::html( $meta, $field );
+		$output = parent::html( $meta, $field );
 		$output .= sprintf( '<span class="rwmb-output">%s</span>', $meta );
+
 		return $output;
 	}
 
@@ -34,6 +36,7 @@ class RWMB_Range_Field extends RWMB_Number_Field {
 	 * Normalize parameters for field.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return array
 	 */
 	public static function normalize( $field ) {
@@ -44,16 +47,17 @@ class RWMB_Range_Field extends RWMB_Number_Field {
 			)
 		);
 		$field = parent::normalize( $field );
+
 		return $field;
 	}
 
 	/**
 	 * Ensure number in range.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return int
 	 */
@@ -68,6 +72,7 @@ class RWMB_Range_Field extends RWMB_Number_Field {
 		if ( $new > $max ) {
 			return $max;
 		}
+
 		return $new;
 	}
 }

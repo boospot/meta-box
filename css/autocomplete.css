@@ -1,17 +1,20 @@
 .rwmb-autocomplete-result {
-	border-bottom: 1px solid #ccc;
-	padding: 1em 0;
-	overflow: hidden;
+    border-bottom: 1px solid #ccc;
+    padding: 1em 0;
+    overflow: hidden;
 }
+
 .rwmb-autocomplete-result .label {
-	float: left;
-	width: 90%;
+    float: left;
+    width: 90%;
 }
+
 .rwmb-autocomplete-result .actions {
-	width: 10%;
-	float: right;
-	cursor: pointer;
+    width: 10%;
+    float: right;
+    cursor: pointer;
 }
+
 .ui-autocomplete {
-	z-index: 999999;
+    z-index: 999999;
 }

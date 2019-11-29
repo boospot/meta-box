@@ -12,7 +12,7 @@ class RWMB_Custom_Html_Field extends RWMB_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -22,6 +22,7 @@ class RWMB_Custom_Html_Field extends RWMB_Field {
 		if ( ! empty( $field['callback'] ) && is_callable( $field['callback'] ) ) {
 			$html = call_user_func_array( $field['callback'], array( $meta, $field ) );
 		}
+
 		return $html;
 	}
 }

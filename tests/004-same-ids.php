@@ -35,6 +35,7 @@ add_filter(
 				],
 			],
 		];
+
 		return $meta_boxes;
 	}
 );
@@ -44,6 +45,7 @@ add_filter(
 	'the_content',
 	function ( $content ) {
 		$content .= '<h2>Test <code>rwmb_meta( \'name\' )</code></h2>' . rwmb_meta( 'name' );
+
 		return $content;
 	}
 );

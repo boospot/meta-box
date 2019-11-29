@@ -12,8 +12,9 @@ class RWMB_Checkbox_Field extends RWMB_Input_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function html( $meta, $field ) {
@@ -26,6 +27,7 @@ class RWMB_Checkbox_Field extends RWMB_Input_Field {
 		if ( $field['desc'] ) {
 			$output = "<label id='{$field['id']}_description' class='description'>$output {$field['desc']}</label>";
 		}
+
 		return $output;
 	}
 
@@ -33,6 +35,7 @@ class RWMB_Checkbox_Field extends RWMB_Input_Field {
 	 * Do not show field description.
 	 *
 	 * @param array $field Field parameters.
+	 *
 	 * @return string
 	 */
 	public static function input_description( $field ) {
@@ -42,14 +45,14 @@ class RWMB_Checkbox_Field extends RWMB_Input_Field {
 	/**
 	 * Format a single value for the helper functions. Sub-fields should overwrite this method if necessary.
 	 *
-	 * @param array    $field   Field parameters.
-	 * @param string   $value   The value.
-	 * @param array    $args    Additional arguments. Rarely used. See specific fields for details.
+	 * @param array $field Field parameters.
+	 * @param string $value The value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
 	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
 	public static function format_single_value( $field, $value, $args, $post_id ) {
-		return $value ?esc_html__( 'Yes', 'meta-box' ) :esc_html__( 'No', 'meta-box' );
+		return $value ? esc_html__( 'Yes', 'meta-box' ) : esc_html__( 'No', 'meta-box' );
 	}
 }

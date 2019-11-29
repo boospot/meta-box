@@ -19,20 +19,21 @@ class RWMB_Divider_Field extends RWMB_Field {
 	/**
 	 * Show begin HTML markup for fields.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
 	 */
 	public static function begin_html( $meta, $field ) {
 		$attributes = empty( $field['id'] ) ? '' : " id='{$field['id']}'";
+
 		return "<hr$attributes>";
 	}
 
 	/**
 	 * Show end HTML markup for fields.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string

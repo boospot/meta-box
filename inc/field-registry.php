@@ -20,8 +20,8 @@ class RWMB_Field_Registry {
 	/**
 	 * Add a single field to the registry.
 	 *
-	 * @param array  $field       Field configuration.
-	 * @param string $type        Post type|Taxonomy|'user'|Setting page which the field belongs to.
+	 * @param array $field Field configuration.
+	 * @param string $type Post type|Taxonomy|'user'|Setting page which the field belongs to.
 	 * @param string $object_type Object type which the field belongs to.
 	 */
 	public function add( $field, $type, $object_type = 'post' ) {
@@ -43,8 +43,8 @@ class RWMB_Field_Registry {
 	/**
 	 * Retrieve a field.
 	 *
-	 * @param string $id          A meta box instance id.
-	 * @param string $type        Post type|Taxonomy|'user'|Setting page which the field belongs to.
+	 * @param string $id A meta box instance id.
+	 * @param string $type Post type|Taxonomy|'user'|Setting page which the field belongs to.
 	 * @param string $object_type Object type which the field belongs to.
 	 *
 	 * @return bool|array False or field configuration.

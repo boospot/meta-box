@@ -12,7 +12,7 @@ class RWMB_Key_Value_Field extends RWMB_Text_Field {
 	/**
 	 * Get field HTML.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -28,7 +28,7 @@ class RWMB_Key_Value_Field extends RWMB_Text_Field {
 		$val                       = isset( $meta[1] ) ? $meta[1] : '';
 		$attributes                = self::get_attributes( $field, $val );
 		$attributes['placeholder'] = $field['placeholder']['value'];
-		$html                     .= sprintf( '<input %s>', self::render_attributes( $attributes ) );
+		$html                      .= sprintf( '<input %s>', self::render_attributes( $attributes ) );
 
 		return $html;
 	}
@@ -36,7 +36,7 @@ class RWMB_Key_Value_Field extends RWMB_Text_Field {
 	/**
 	 * Show begin HTML markup for fields.
 	 *
-	 * @param mixed $meta  Meta value.
+	 * @param mixed $meta Meta value.
 	 * @param array $field Field parameters.
 	 *
 	 * @return string
@@ -93,16 +93,17 @@ class RWMB_Key_Value_Field extends RWMB_Text_Field {
 		foreach ( (array) $meta as $k => $pairs ) {
 			$meta[ $k ] = array_map( 'esc_attr', (array) $pairs );
 		}
+
 		return $meta;
 	}
 
 	/**
 	 * Sanitize field value.
 	 *
-	 * @param mixed $new     The submitted meta value.
-	 * @param mixed $old     The existing meta value.
-	 * @param int   $post_id The post ID.
-	 * @param array $field   The field parameters.
+	 * @param mixed $new The submitted meta value.
+	 * @param mixed $old The existing meta value.
+	 * @param int $post_id The post ID.
+	 * @param array $field The field parameters.
 	 *
 	 * @return array
 	 */
@@ -113,6 +114,7 @@ class RWMB_Key_Value_Field extends RWMB_Text_Field {
 			}
 		}
 		$new = array_filter( $new );
+
 		return $new;
 	}
 
@@ -132,20 +134,21 @@ class RWMB_Key_Value_Field extends RWMB_Text_Field {
 		$field['placeholder']        = wp_parse_args(
 			(array) $field['placeholder'],
 			array(
-				'key'   =>esc_html__( 'Key', 'meta-box' ),
-				'value' =>esc_html__( 'Value', 'meta-box' ),
+				'key'   => esc_html__( 'Key', 'meta-box' ),
+				'value' => esc_html__( 'Value', 'meta-box' ),
 			)
 		);
+
 		return $field;
 	}
 
 	/**
 	 * Format value for the helper functions.
 	 *
-	 * @param array        $field   Field parameters.
-	 * @param string|array $value   The field meta value.
-	 * @param array        $args    Additional arguments. Rarely used. See specific fields for details.
-	 * @param int|null     $post_id Post ID. null for current post. Optional.
+	 * @param array $field Field parameters.
+	 * @param string|array $value The field meta value.
+	 * @param array $args Additional arguments. Rarely used. See specific fields for details.
+	 * @param int|null $post_id Post ID. null for current post. Optional.
 	 *
 	 * @return string
 	 */
